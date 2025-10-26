@@ -4,7 +4,6 @@ import com.edu.silva.users.domain.AuthDTO;
 import com.edu.silva.users.domain.LoginResponseDTO;
 import com.edu.silva.users.domain.entities.User;
 import com.edu.silva.users.infra.security.TokenService;
-import com.edu.silva.users.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -52,6 +52,7 @@ public class UserController {
         return repository.findById(id)
                 .map(user -> {
                     user.setUsername(newData.getUsername());
+                    user.setStatus(newData.getStatus());
                     return repository.save(user);
                 })
                 .orElseGet(() -> repository.save(newData));
