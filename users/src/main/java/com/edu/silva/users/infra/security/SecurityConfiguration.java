@@ -31,11 +31,12 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/"
                         ).permitAll()
                         .requestMatchers(
                                 HttpMethod.POST,
-                                "/auth/register",
+                                "/user",
                                 "/auth/login"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")

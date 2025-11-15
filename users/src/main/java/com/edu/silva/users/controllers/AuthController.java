@@ -1,7 +1,7 @@
 package com.edu.silva.users.controllers;
 
-import com.edu.silva.users.domain.AuthDTO;
-import com.edu.silva.users.domain.LoginResponseDTO;
+import com.edu.silva.users.domain.dtos.requests.AuthRequestDTO;
+import com.edu.silva.users.domain.dtos.responses.LoginResponseDTO;
 import com.edu.silva.users.domain.entities.User;
 import com.edu.silva.users.infra.security.TokenService;
 import jakarta.validation.Valid;
@@ -28,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthDTO dto) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthRequestDTO dto) {
         UsernamePasswordAuthenticationToken userNamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
         Authentication authentication = authenticationManager.authenticate(userNamePassword);
         String token = tokenService.generateToken((User) authentication.getPrincipal());

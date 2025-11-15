@@ -1,65 +1,48 @@
 package com.edu.silva.users.controllers;
 
-import com.edu.silva.users.domain.RegisterRequestDTO;
-import com.edu.silva.users.domain.UserRole;
-import com.edu.silva.users.domain.UserStatus;
 import com.edu.silva.users.domain.entities.User;
-import com.edu.silva.users.repositories.UserRepository;
+import com.edu.silva.users.domain.dtos.requests.RegisterRequestDTO;
+import com.edu.silva.users.domain.dtos.requests.UpdateUserRequestDTO;
+import com.edu.silva.users.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class UserController {
-    private final UserRepository repository;
+    private final UserServiceImpl service;
 
-    UserController(UserRepository repository) {
-        this.repository = repository;
+    UserController(UserServiceImpl userService) {
+        this.service = userService;
     }
 
     @GetMapping("/users")
-    List<User> all() {
-        return repository.findAll();
+    ResponseEntity<List<User>> all() {
+        return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/user/{id}")
-    User one(@PathVariable Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    ResponseEntity<User> one(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping("/user")
-    public ResponseEntity<User> newData(@RequestBody @Valid RegisterRequestDTO dto) {
-        if (repository.findByEmail(dto.email()) != null) {
-            return ResponseEntity.badRequest().build();
-        }
-        if (dto.role().equals(UserRole.ADMIN)) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(dto.password());
-        User user = new User(dto.username(), dto.email(), encryptedPassword, dto.role());
-        user.setStatus(UserStatus.WAITING_CONFIRMATION);
-        repository.save(user);
-        return ResponseEntity.ok(user);
+    ResponseEntity<User> save(@RequestBody @Valid RegisterRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
     @PutMapping("/user/{id}")
-    User replace(@RequestBody User newData, @PathVariable Long id) {
-        return repository.findById(id)
-                .map(user -> {
-                    user.setUsername(newData.getUsername());
-                    user.setStatus(newData.getStatus());
-                    return repository.save(user);
-                })
-                .orElseGet(() -> repository.save(newData));
+    ResponseEntity<User> replace(@RequestBody @Valid UpdateUserRequestDTO request, @PathVariable UUID id) {
+        return ResponseEntity.ok(service.update(id, request));
     }
 
     @DeleteMapping("/user/{id}")
-    void delete(@PathVariable Long id) {
-        repository.deleteById(id);
+    ResponseEntity<User> delete(@PathVariable UUID id) {
+        service.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

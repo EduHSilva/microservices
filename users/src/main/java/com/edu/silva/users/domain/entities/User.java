@@ -1,30 +1,39 @@
 package com.edu.silva.users.domain.entities;
 
-import com.edu.silva.users.domain.UserRole;
-import com.edu.silva.users.domain.UserStatus;
+import com.edu.silva.users.domain.enums.UserRole;
+import com.edu.silva.users.domain.enums.UserStatus;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
+@SQLDelete(sql = "UPDATE users SET status = 'DELETED' WHERE id=?")
+@SQLRestriction("status <> 'DELETED'")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
     @CreationTimestamp
     private Date createdDate;
     @UpdateTimestamp
@@ -62,7 +71,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return status.equals(UserStatus.BLOCKED);
+        return !status.equals(UserStatus.BLOCKED);
     }
 
     @Override
