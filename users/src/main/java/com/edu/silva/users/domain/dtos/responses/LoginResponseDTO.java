@@ -1,4 +1,6 @@
 package com.edu.silva.users.domain.dtos.responses;
 
-public record LoginResponseDTO(String token) {
+import java.util.UUID;
+
+public record LoginResponseDTO(UUID id, String username, String email, String token) {
 }

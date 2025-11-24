@@ -13,4 +13,5 @@ public interface UserService {
     List<User> findAll();
     User findById(UUID id);
     User update(UUID id, UpdateUserRequestDTO request);
+    User confirm(UUID id);
 }

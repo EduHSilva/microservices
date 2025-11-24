@@ -68,4 +68,18 @@ public class UserServiceImpl implements UserService {
                 })
                 .orElseThrow(() -> new CustomExceptions.EntityNotFoundException(User.class.getName(), id));
     }
+
+    @Override
+    public User confirm(UUID id) {
+        return repository.findById(id)
+                .map(user -> {
+                    if (user.getStatus() == UserStatus.WAITING_CONFIRMATION) {
+                        user.setStatus(UserStatus.OK);
+                        return repository.save(user);
+                    } else {
+                        throw new CustomExceptions.InvalidStatusException("User com status inválido para confirmação");
+                    }
+                })
+                .orElseThrow(() -> new CustomExceptions.EntityNotFoundException(User.class.getName(), id));
+    }
 }

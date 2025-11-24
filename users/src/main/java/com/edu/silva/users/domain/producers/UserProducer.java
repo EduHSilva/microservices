@@ -18,10 +18,15 @@ public class UserProducer {
     @Value(value = "${broker.queue.email.name}")
     private String routingKey;
 
+    @Value(value = "${server.url}")
+    private String url;
+
     public void publishMessageEmail(User user) {
         EmailDTO emailDto = new EmailDTO();
         emailDto.setEmailTo(user.getEmail());
         emailDto.setUserID(user.getId());
+        emailDto.setUsername(user.getUsername());
+        emailDto.setBtnURL(url + "/user/confirm/" + user.getId());
         emailDto.setLocaleTag("pt-BR");
         emailDto.setEmailType(EmailType.NEW_USER);
 

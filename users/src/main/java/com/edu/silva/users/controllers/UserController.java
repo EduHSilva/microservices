@@ -6,6 +6,7 @@ import com.edu.silva.users.domain.dtos.requests.UpdateUserRequestDTO;
 import com.edu.silva.users.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,21 @@ public class UserController {
     ResponseEntity<User> save(@RequestBody @Valid RegisterRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
+
+    @GetMapping(value = "/user/confirm/{id}", produces = MediaType.TEXT_HTML_VALUE)
+    public String confirm(@PathVariable UUID id) {
+        service.confirm(id);
+
+        return """
+                    <html>
+                    <body style='font-family: Arial; padding: 40px; text-align: center'>
+                        <h2>Email confirmado com sucesso!</h2>
+                        <p>Agora você já pode fechar essa aba.</p>
+                    </body>
+                    </html>
+                """;
+    }
+
 
     @PutMapping("/user/{id}")
     ResponseEntity<User> replace(@RequestBody @Valid UpdateUserRequestDTO request, @PathVariable UUID id) {
