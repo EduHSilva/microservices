@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,8 +25,8 @@ public class AuthController {
     }
 
     @GetMapping("me")
-    public ResponseEntity<?> me() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> me(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(new LoginResponseDTO(user.getId(), user.getUsername(), user.getEmail(), null));
     }
 
 
