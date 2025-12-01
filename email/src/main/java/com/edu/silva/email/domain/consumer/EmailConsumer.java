@@ -35,7 +35,7 @@ public class EmailConsumer {
 
         String subject;
         String body;
-        String btnLabel = "";
+        String btnLabel;
 
         switch (dto.getEmailType()) {
             case NEW_USER:
