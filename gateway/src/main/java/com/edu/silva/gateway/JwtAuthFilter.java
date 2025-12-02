@@ -1,7 +1,6 @@
 package com.edu.silva.gateway;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.edu.silva.gateway.JwtUtil;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.http.HttpHeaders;
