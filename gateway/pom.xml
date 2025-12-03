@@ -11,7 +11,7 @@
 	<groupId>com.edu.silva</groupId>
 	<artifactId>gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>gateway</name>
 	<description>A api gateway</description>
 	<url/>
@@ -39,6 +39,7 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <scope>provided</scope>
 		</dependency>
 
 		<dependency>

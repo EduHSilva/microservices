@@ -11,7 +11,7 @@
 	<groupId>com.edu.silva</groupId>
 	<artifactId>service-discover</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>service-discover</name>
 	<description>A service discover for microservices</description>
 	<url/>
@@ -39,7 +39,8 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-		</dependency>
+            <scope>provided</scope>
+        </dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

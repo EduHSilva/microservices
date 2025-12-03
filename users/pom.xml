@@ -11,7 +11,7 @@
     <groupId>com.edu.silva</groupId>
     <artifactId>users</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>users</name>
     <description>Manager users microsservice</description>
     <url/>
@@ -35,6 +35,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.validation</groupId>

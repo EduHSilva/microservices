@@ -11,7 +11,7 @@
     <groupId>com.edu.silva</groupId>
     <artifactId>crm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>crm</name>
     <description>A microservice for a CRM</description>
     <url/>
@@ -35,6 +35,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

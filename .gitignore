@@ -35,3 +35,4 @@ build/
 .mvn
 *-dev.properties
 *-prod.properties
+**/*-docker.properties

@@ -1,0 +1,64 @@
+services:
+  service-discover:
+    build: ./service-discover
+    container_name: service-discover
+    ports:
+      - "8761:8761"
+
+  users:
+    build: ./users
+    container_name: users
+    depends_on:
+      - service-discover
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discover:8761/eureka/"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://host.docker.internal:5432/users"
+    ports:
+      - "8181:8181"
+
+  payments:
+    build: ./payments
+    container_name: payments
+    depends_on:
+      - service-discover
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discover:8761/eureka/"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://host.docker.internal:5432/payments"
+    ports:
+      - "8282:8282"
+
+  crm:
+    build: ./crm
+    container_name: crm
+    depends_on:
+      - service-discover
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discover:8761/eureka/"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://host.docker.internal:5432/crm"
+    ports:
+      - "8383:8383"
+
+  email:
+    build: ./email
+    container_name: email
+    depends_on:
+      - service-discover
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://host.docker.internal:5432/email"
+    ports:
+      - "8484:8484"
+
+  gateway:
+    build: ./gateway
+    container_name: gateway
+    depends_on:
+      - service-discover
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discover:8761/eureka/"
+    ports:
+      - "8080:8080"
