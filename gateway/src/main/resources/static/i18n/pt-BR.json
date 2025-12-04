@@ -1,3 +1,6 @@
 {
-  "docs": "Documentação"
+  "title": "Documentação",
+  "menu_services": "Serviços",
+  "services_title": "Serviços registrados",
+  "services_desc": "Abaixo todos os serviços registrados no gateway: "
 }

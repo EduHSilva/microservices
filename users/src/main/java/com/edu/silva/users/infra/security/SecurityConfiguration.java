@@ -28,19 +28,18 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "/"
+                                "/ping"
                         ).permitAll()
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/user",
-                                "/auth/login"
+                                "/auth/login/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/user/confirm/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")

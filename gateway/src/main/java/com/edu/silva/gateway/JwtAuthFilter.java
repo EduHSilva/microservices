@@ -24,7 +24,7 @@ public class JwtAuthFilter implements GlobalFilter {
 
         String path = exchange.getRequest().getURI().getPath();
 
-        if (path.startsWith("/") || path.startsWith("/login") || path.startsWith("/health")) {
+        if (path.startsWith("/ping") || path.startsWith("/v3") ||  path.startsWith("/auth") || path.startsWith("/health")){
             return chain.filter(exchange);
         }
 
@@ -48,7 +48,7 @@ public class JwtAuthFilter implements GlobalFilter {
 
         exchange = exchange.mutate()
                 .request(builder ->
-                        builder.header("X-User-Email", subject))
+                        builder.header("X-User-ID", subject))
                 .build();
 
         return chain.filter(exchange);

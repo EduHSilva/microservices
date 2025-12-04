@@ -2,6 +2,7 @@ package com.edu.silva.users.services.impl;
 
 import com.edu.silva.users.domain.dtos.requests.RegisterRequestDTO;
 import com.edu.silva.users.domain.dtos.requests.UpdateUserRequestDTO;
+import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
 import com.edu.silva.users.domain.entities.User;
 import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.domain.enums.UserStatus;
@@ -46,7 +47,7 @@ class UserServiceImplTest {
         when(repository.findByEmail("edu@test.com")).thenReturn(null);
         when(repository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        User saved = service.save(dto);
+        UserResponseDTO saved = service.save(dto);
 
         assertEquals("Eduardo", saved.getUsername());
         assertEquals(UserStatus.WAITING_CONFIRMATION, saved.getStatus());
@@ -81,7 +82,7 @@ class UserServiceImplTest {
         User user = new User("Eduardo", "edu@test.com", "123", UserRole.CRM);
         when(repository.findById(id)).thenReturn(Optional.of(user));
 
-        User result = service.findById(id);
+        UserResponseDTO result = service.findById(id);
         assertEquals("Eduardo", result.getUsername());
     }
 
@@ -103,7 +104,7 @@ class UserServiceImplTest {
         when(repository.findById(id)).thenReturn(Optional.of(user));
         when(repository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        User updated = service.update(id, req);
+        UserResponseDTO updated = service.update(id, req);
 
         assertEquals("NewName", updated.getUsername());
     }
@@ -127,7 +128,7 @@ class UserServiceImplTest {
         when(repository.findById(id)).thenReturn(Optional.of(user));
         when(repository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        User confirmed = service.confirm(id);
+        UserResponseDTO confirmed = service.confirm(id);
 
         assertEquals(UserStatus.OK, confirmed.getStatus());
     }
