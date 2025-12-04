@@ -1,9 +1,7 @@
 package com.edu.silva.crm.domain.dtos.responses;
 
 import com.edu.silva.crm.domain.entities.Budget;
-import com.edu.silva.crm.domain.entities.Client;
 import com.edu.silva.crm.domain.enums.BudgetStatus;
-import com.edu.silva.crm.domain.enums.ClientStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

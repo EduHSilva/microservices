@@ -1,6 +1,5 @@
 package com.edu.silva.crm.domain.dtos.responses;
 
-import com.edu.silva.crm.domain.entities.Budget;
 import com.edu.silva.crm.domain.entities.Maintenance;
 import com.edu.silva.crm.domain.enums.BudgetStatus;
 import lombok.AllArgsConstructor;

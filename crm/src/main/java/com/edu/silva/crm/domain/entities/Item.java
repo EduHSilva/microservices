@@ -9,7 +9,6 @@ import org.hibernate.annotations.*;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Data

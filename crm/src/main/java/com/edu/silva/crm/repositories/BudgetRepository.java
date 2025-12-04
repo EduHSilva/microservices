@@ -1,7 +1,6 @@
 package com.edu.silva.crm.repositories;
 
 import com.edu.silva.crm.domain.entities.Budget;
-import com.edu.silva.crm.domain.entities.Client;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 

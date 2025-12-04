@@ -41,9 +41,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @Override
     public void delete(UUID id) {
-        repository.findById(id).ifPresent(entity -> {
-            repository.deleteById(id);
-        });
+        repository.findById(id).ifPresent(entity -> repository.deleteById(id));
     }
 
     @Override

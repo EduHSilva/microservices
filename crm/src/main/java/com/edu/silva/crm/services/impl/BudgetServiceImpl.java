@@ -39,9 +39,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public void delete(UUID id) {
-        repository.findById(id).ifPresent(entity -> {
-            repository.deleteById(id);
-        });
+        repository.findById(id).ifPresent(entity -> repository.deleteById(id));
     }
 
     @Override

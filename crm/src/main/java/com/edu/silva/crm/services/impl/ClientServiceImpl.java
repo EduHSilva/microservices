@@ -24,7 +24,7 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository repository;
 
-    public ClientServiceImpl(ClientRepository userRepository, ClientProducer producer) {
+    public ClientServiceImpl(ClientRepository userRepository) {
         this.repository = userRepository;
     }
 
@@ -40,9 +40,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void delete(UUID id) {
-        repository.findById(id).ifPresent(entity -> {
-            repository.deleteById(id);
-        });
+        repository.findById(id).ifPresent(entity -> repository.deleteById(id));
     }
 
     @Override
