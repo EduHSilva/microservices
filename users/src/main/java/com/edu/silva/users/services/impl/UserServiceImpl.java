@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO findById(UUID id) {
         return new UserResponseDTO(repository.findById(id)
-                .orElseThrow(() -> new CustomExceptions.EntityNotFoundException(User.class.getName(), id)));
+                .orElseThrow(() -> new CustomExceptions.EntityNotFoundException(User.class.getSimpleName(), id)));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
                     user.setUsername(updateUserRequest.username());
                     return new UserResponseDTO(repository.save(user));
                 })
-                .orElseThrow(() -> new CustomExceptions.EntityNotFoundException(User.class.getName(), id));
+                .orElseThrow(() -> new CustomExceptions.EntityNotFoundException(User.class.getSimpleName(), id));
     }
 
     @Override
@@ -85,6 +85,6 @@ public class UserServiceImpl implements UserService {
                         throw new CustomExceptions.InvalidStatusException("User com status inválido para confirmação");
                     }
                 })
-                .orElseThrow(() -> new CustomExceptions.EntityNotFoundException(User.class.getName(), id));
+                .orElseThrow(() -> new CustomExceptions.EntityNotFoundException(User.class.getSimpleName(), id));
     }
 }

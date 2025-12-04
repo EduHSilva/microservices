@@ -1,5 +1,6 @@
 package com.edu.silva.crm.repositories;
 
+import com.edu.silva.crm.domain.entities.Budget;
 import com.edu.silva.crm.domain.entities.Client;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
 
-public interface ClientRepository extends JpaRepository<@NonNull Client, @NonNull UUID> {
+public interface BudgetRepository extends JpaRepository<@NonNull Budget, @NonNull UUID> {
 }

@@ -4,7 +4,7 @@ import com.edu.silva.common.DefaultResponse;
 import com.edu.silva.users.domain.dtos.requests.RegisterRequestDTO;
 import com.edu.silva.users.domain.dtos.requests.UpdateUserRequestDTO;
 import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
-import com.edu.silva.users.services.impl.UserServiceImpl;
+import com.edu.silva.users.services.UserService;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
@@ -17,11 +17,11 @@ import java.util.UUID;
 
 @RestController
 public class UserController {
-    private final UserServiceImpl service;
+    private final UserService service;
 
     private final String BASE_URL = "/users";
 
-    UserController(UserServiceImpl userService) {
+    UserController(UserService userService) {
         this.service = userService;
     }
 

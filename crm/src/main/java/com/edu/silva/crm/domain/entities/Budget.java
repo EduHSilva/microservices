@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,6 +19,14 @@ import java.util.UUID;
 @Table(name = "budgets")
 @SQLDelete(sql = "UPDATE budgets SET status = 'DELETED' WHERE id=?")
 @SQLRestriction("status <> 'DELETED'")
+@FilterDef(
+        name = "userFilter",
+        parameters = @ParamDef(name = "userId", type = UUID.class)
+)
+@Filter(
+        name = "userFilter",
+        condition = "user_id = :userId"
+)
 public class Budget implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -38,6 +43,19 @@ public class Budget implements Serializable {
     @Column(length = 1000)
     private String observations;
     private BudgetStatus status;
+    @ManyToOne
+    private Client client;
+    @Column(name = "user_id")
+    private UUID userId;
+    @OneToOne(mappedBy = "budget")
+    private Maintenance service;
+
+    public Budget(String title, String description, String terms, String observations) {
+        this.title = title;
+        this.description = description;
+        this.terms = terms;
+        this.observations = observations;
+    }
 
     @ManyToMany
     private List<Item> items;
