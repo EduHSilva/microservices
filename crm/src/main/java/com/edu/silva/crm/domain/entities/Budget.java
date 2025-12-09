@@ -53,8 +53,6 @@ public class Budget implements Serializable {
     private Client client;
     @Column(name = "user_id")
     private UUID userId;
-    @OneToOne(mappedBy = "budget")
-    private Maintenance service;
 
     @OneToMany(mappedBy = "budget", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items = new ArrayList<>();

@@ -40,7 +40,7 @@ public class BudgetServiceImpl implements BudgetService {
     @Transactional
     public BudgetResponseDTO save(NewBudgetRequestDTO dto) {
         Budget budget = new Budget();
-        budget.setStatus(BudgetStatus.NEW);
+        budget.setStatus(BudgetStatus.DRAFT);
         UUID userId = UserContext.getUser();
         budget.setUserId(userId);
         budget.setTitle(dto.title());
@@ -51,7 +51,7 @@ public class BudgetServiceImpl implements BudgetService {
 
         Client c = clientRepository.findById(dto.client()).orElseThrow(() -> new CustomExceptions.EntityNotFoundException("Client nao encontrado", ""));
         budget.setClient(c);
-        budget.setStatus(BudgetStatus.NEW);
+        budget.setStatus(BudgetStatus.DRAFT);
         dto.items().forEach(i -> {
             budget.getItems().add(createItem(i, budget));
         });
