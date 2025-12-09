@@ -1,16 +1,14 @@
 package com.edu.silva.crm.services.impl;
 
 import com.edu.silva.common.enums.Status;
+import com.edu.silva.crm.domain.dtos.ItemDTO;
 import com.edu.silva.crm.domain.dtos.requests.NewBudgetRequestDTO;
 import com.edu.silva.crm.domain.dtos.requests.UpdateBudgetRequestDTO;
 import com.edu.silva.crm.domain.dtos.responses.BudgetResponseDTO;
-import com.edu.silva.crm.domain.dtos.ItemDTO;
-import com.edu.silva.crm.domain.dtos.responses.ClientResponseDTO;
 import com.edu.silva.crm.domain.entities.Budget;
 import com.edu.silva.crm.domain.entities.Client;
 import com.edu.silva.crm.domain.entities.Item;
 import com.edu.silva.crm.domain.enums.BudgetStatus;
-import com.edu.silva.crm.domain.enums.ClientStatus;
 import com.edu.silva.crm.infra.config.UserContext;
 import com.edu.silva.crm.infra.exceptions.CustomExceptions;
 import com.edu.silva.crm.repositories.BudgetRepository;
@@ -23,7 +21,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service

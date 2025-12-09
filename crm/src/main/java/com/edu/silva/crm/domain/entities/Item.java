@@ -1,7 +1,6 @@
 package com.edu.silva.crm.domain.entities;
 
 import com.edu.silva.common.enums.Status;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

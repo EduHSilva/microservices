@@ -1,9 +1,7 @@
 package com.edu.silva.crm.repositories;
 
 import com.edu.silva.crm.domain.entities.Budget;
-import com.edu.silva.crm.domain.entities.Client;
 import com.edu.silva.crm.domain.enums.BudgetStatus;
-import com.edu.silva.crm.domain.enums.ClientStatus;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
