@@ -2,12 +2,15 @@ package com.edu.silva.crm.domain.entities;
 
 import com.edu.silva.crm.domain.enums.BudgetStatus;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +30,7 @@ import java.util.UUID;
         name = "userFilter",
         condition = "user_id = :userId"
 )
+@ToString(exclude = {"items", "client"})
 public class Budget implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -42,6 +46,8 @@ public class Budget implements Serializable {
     private String terms;
     @Column(length = 1000)
     private String observations;
+    private int validate;
+    @Enumerated(EnumType.STRING)
     private BudgetStatus status;
     @ManyToOne
     private Client client;
@@ -50,13 +56,6 @@ public class Budget implements Serializable {
     @OneToOne(mappedBy = "budget")
     private Maintenance service;
 
-    public Budget(String title, String description, String terms, String observations) {
-        this.title = title;
-        this.description = description;
-        this.terms = terms;
-        this.observations = observations;
-    }
-
-    @ManyToMany
-    private List<Item> items;
+    @OneToMany(mappedBy = "budget", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Item> items = new ArrayList<>();
 }

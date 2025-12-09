@@ -27,9 +27,11 @@ public class BudgetController {
     @GetMapping("/budgets")
     public ResponseEntity<@NonNull DefaultResponse> getAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String status
     ) {
-        Page<@NonNull BudgetResponseDTO> budgets = service.findAll(page, size);
+        Page<@NonNull BudgetResponseDTO> budgets = service.findAll(page, size, title, status);
 
         return ResponseEntity.ok(
                 new DefaultResponse("Find all budgets successfully", budgets, BASE_URL)

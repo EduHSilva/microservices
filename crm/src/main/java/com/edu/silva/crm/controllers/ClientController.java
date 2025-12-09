@@ -27,9 +27,11 @@ public class ClientController {
     @GetMapping("/clients")
     public ResponseEntity<@NonNull DefaultResponse> getAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String status
     ) {
-        Page<@NonNull ClientResponseDTO> clients = service.findAll(page, size);
+        Page<@NonNull ClientResponseDTO> clients = service.findAll(page, size, name, status);
 
         return ResponseEntity.ok(
                 new DefaultResponse("Find all clients successfully", clients, BASE_URL)
@@ -73,7 +75,7 @@ public class ClientController {
             @RequestBody @Valid UpdateClientRequestDTO dto
     ) {
         return ResponseEntity.ok(
-                new DefaultResponse("Client successfully saved", service.update(id, dto), BASE_URL, id)
+                new DefaultResponse("Client successfully updated", service.update(id, dto), BASE_URL, id)
         );
     }
 }

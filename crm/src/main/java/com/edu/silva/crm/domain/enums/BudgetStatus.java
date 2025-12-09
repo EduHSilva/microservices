@@ -4,9 +4,13 @@ import lombok.Getter;
 
 @Getter
 public enum BudgetStatus {
-    NEW("new"),
-    SEND("working"),
+    DRAFT("draft"),
+    SEND("send"),
+    WAITING("waiting"),
     APPROVED("approved"),
+    WORKING("working"),
+    DONE("done"),
+    CANCEL("cancel"),
     DENY("deny"),
     DELETED("deleted");
 

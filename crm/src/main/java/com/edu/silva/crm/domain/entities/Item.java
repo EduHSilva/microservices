@@ -1,10 +1,12 @@
 package com.edu.silva.crm.domain.entities;
 
 import com.edu.silva.common.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.*;
 
 import java.io.Serializable;
@@ -26,6 +28,7 @@ import java.util.UUID;
         name = "userFilter",
         condition = "user_id = :userId"
 )
+@ToString(exclude = "budget")
 public class Item implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -39,7 +42,11 @@ public class Item implements Serializable {
     private String description;
     private Integer quantity;
     private Double priceUn;
+    @Enumerated(EnumType.STRING)
     private Status status;
     @Column(name = "user_id")
     private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "budget_id")
+    private Budget budget;
 }

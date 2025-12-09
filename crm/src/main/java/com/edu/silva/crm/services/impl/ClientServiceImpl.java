@@ -5,7 +5,6 @@ import com.edu.silva.crm.domain.dtos.requests.UpdateClientRequestDTO;
 import com.edu.silva.crm.domain.dtos.responses.ClientResponseDTO;
 import com.edu.silva.crm.domain.entities.Client;
 import com.edu.silva.crm.domain.enums.ClientStatus;
-import com.edu.silva.crm.domain.producers.ClientProducer;
 import com.edu.silva.crm.infra.config.UserContext;
 import com.edu.silva.crm.infra.exceptions.CustomExceptions;
 import com.edu.silva.crm.repositories.ClientRepository;
@@ -15,6 +14,7 @@ import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -44,8 +44,26 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Page<@NonNull ClientResponseDTO> findAll(int page, int size) {
+    public Page<@NonNull ClientResponseDTO> findAll(int page, int size, String name, String status) {
         Pageable pageable = PageRequest.of(page, size);
+        if (name != null && status != null) {
+            return repository
+                    .findByNameContainingIgnoreCaseAndStatus(name, ClientStatus.valueOf(status.toUpperCase()), pageable)
+                    .map(ClientResponseDTO::new);
+        }
+
+        if (name != null) {
+            return repository
+                    .findByNameContainingIgnoreCase(name, pageable)
+                    .map(ClientResponseDTO::new);
+        }
+
+        if (status != null) {
+            return repository
+                    .findByStatus(ClientStatus.valueOf(status.toUpperCase()), pageable)
+                    .map(ClientResponseDTO::new);
+        }
+
         return repository.findAll(pageable).map(ClientResponseDTO::new);
     }
 

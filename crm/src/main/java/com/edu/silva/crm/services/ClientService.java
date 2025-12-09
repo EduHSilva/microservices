@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface ClientService {
     ClientResponseDTO save(NewClientRequestDTO request);
     void delete(UUID id);
-    Page<@NonNull ClientResponseDTO> findAll(int page, int size);
+    Page<@NonNull ClientResponseDTO> findAll(int page, int size, String name, String status);
     ClientResponseDTO findById(UUID id);
     ClientResponseDTO update(UUID id, UpdateClientRequestDTO request);
 }
