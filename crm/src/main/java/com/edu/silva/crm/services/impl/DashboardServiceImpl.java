@@ -1,27 +1,11 @@
 package com.edu.silva.crm.services.impl;
 
-import com.edu.silva.crm.domain.dtos.requests.NewClientRequestDTO;
-import com.edu.silva.crm.domain.dtos.requests.UpdateClientRequestDTO;
 import com.edu.silva.crm.domain.dtos.responses.BudgetResponseDTO;
-import com.edu.silva.crm.domain.dtos.responses.ClientResponseDTO;
 import com.edu.silva.crm.domain.dtos.responses.DashboardResponseDTO;
-import com.edu.silva.crm.domain.entities.Client;
-import com.edu.silva.crm.domain.enums.ClientStatus;
-import com.edu.silva.crm.infra.config.UserContext;
-import com.edu.silva.crm.infra.exceptions.CustomExceptions;
 import com.edu.silva.crm.repositories.BudgetRepository;
-import com.edu.silva.crm.repositories.ClientRepository;
-import com.edu.silva.crm.services.ClientService;
 import com.edu.silva.crm.services.DashboardService;
-import jakarta.transaction.Transactional;
-import lombok.NonNull;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class DashboardServiceImpl implements DashboardService {

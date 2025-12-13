@@ -1,11 +1,8 @@
 package com.edu.silva.crm.controllers;
 
 import com.edu.silva.common.DefaultResponse;
-import com.edu.silva.crm.domain.dtos.responses.ClientResponseDTO;
 import com.edu.silva.crm.domain.dtos.responses.DashboardResponseDTO;
 import com.edu.silva.crm.services.DashboardService;
-import lombok.NonNull;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
