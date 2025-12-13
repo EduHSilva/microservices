@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -16,4 +17,6 @@ public interface BudgetRepository extends JpaRepository<@NonNull Budget, @NonNul
     Page<@NonNull Budget> findByStatus(BudgetStatus status, Pageable pageable);
 
     Page<@NonNull Budget> findByTitleContainingIgnoreCaseAndStatus(String name, BudgetStatus status, Pageable pageable);
+
+    List<Budget> findTop5ByOrderByCreatedDateDesc();
 }
