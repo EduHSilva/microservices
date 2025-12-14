@@ -1,6 +1,7 @@
 package com.edu.silva.crm.controllers;
 
 import com.edu.silva.common.DefaultResponse;
+import com.edu.silva.crm.domain.dtos.responses.DashboardKanbanResponseDTO;
 import com.edu.silva.crm.domain.dtos.responses.DashboardResponseDTO;
 import com.edu.silva.crm.services.DashboardService;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,14 @@ public class DashboardController {
     @GetMapping("/dashboard")
     public ResponseEntity<DefaultResponse> getData() {
         DashboardResponseDTO dto = service.getData();
+        return ResponseEntity.ok(
+                new DefaultResponse("Find data successfully", dto)
+        );
+    }
+
+    @GetMapping("/dashboard/kanban")
+    public ResponseEntity<DefaultResponse> getDataKanban() {
+        DashboardKanbanResponseDTO dto = service.getDataKanban();
         return ResponseEntity.ok(
                 new DefaultResponse("Find data successfully", dto)
         );

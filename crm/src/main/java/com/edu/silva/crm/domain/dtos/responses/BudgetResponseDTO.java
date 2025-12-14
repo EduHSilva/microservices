@@ -26,6 +26,7 @@ public class BudgetResponseDTO {
     private String terms;
     private BudgetStatus status;
     private String observations;
+    private int validate;
     private Date createdDate;
     private String clientName;
     private String client;

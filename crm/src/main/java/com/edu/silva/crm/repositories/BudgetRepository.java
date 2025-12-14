@@ -19,4 +19,6 @@ public interface BudgetRepository extends JpaRepository<@NonNull Budget, @NonNul
     Page<@NonNull Budget> findByTitleContainingIgnoreCaseAndStatus(String name, BudgetStatus status, Pageable pageable);
 
     List<Budget> findTop5ByOrderByCreatedDateDesc();
+
+    List<Budget> findByStatus(BudgetStatus status);
 }

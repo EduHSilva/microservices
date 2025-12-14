@@ -37,31 +37,33 @@ public class EmailConsumer {
         String body;
         String btnLabel;
 
-        switch (dto.getEmailType()) {
-            case NEW_USER:
-                subject = i18n.getMessage("welcome.subject", locale, dto.getUsername());
-                body = i18n.getMessage("welcome.body", locale, dto.getUsername());
-                btnLabel = i18n.getMessage("welcome.button", locale, dto.getUsername());
-                break;
+        if(dto.getEmailType() != null) {
+            switch (dto.getEmailType()) {
+                case NEW_USER:
+                    subject = i18n.getMessage("welcome.subject", locale, dto.getUsername());
+                    body = i18n.getMessage("welcome.body", locale, dto.getUsername());
+                    btnLabel = i18n.getMessage("welcome.button", locale, dto.getUsername());
+                    break;
 
-            default:
-                throw new IllegalArgumentException("Invalid email type");
+                default:
+                    throw new IllegalArgumentException("Invalid email type");
+            }
+
+            String html = emailService.render(
+                    "email",
+                    locale,
+                    Map.of(
+                            "body", body,
+                            "title", subject,
+                            "username", dto.getUsername(),
+                            "buttonUrl", dto.getBtnURL(),
+                            "buttonLabel", btnLabel
+                    )
+            );
+
+            email.setSubject(subject);
+            email.setContent(html);
         }
-
-        String html = emailService.render(
-                "email",
-                locale,
-                Map.of(
-                        "body", body,
-                        "title", subject,
-                        "username", dto.getUsername(),
-                        "buttonUrl", dto.getBtnURL(),
-                        "buttonLabel", btnLabel
-                )
-        );
-
-        email.setSubject(subject);
-        email.setContent(html);
     }
 }
 
