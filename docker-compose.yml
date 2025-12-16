@@ -52,6 +52,17 @@ services:
     ports:
       - "8484:8484"
 
+  finances:
+    build: ./finances
+    container_name: finances
+    depends_on:
+      - service-discover
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://host.docker.internal:5432/finances"
+    ports:
+      - "8989:8989"
+
   gateway:
     build: ./gateway
     container_name: gateway

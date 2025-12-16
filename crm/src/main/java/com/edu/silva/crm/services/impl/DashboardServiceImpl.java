@@ -29,8 +29,8 @@ public class DashboardServiceImpl implements DashboardService {
         String sql = """
                   SELECT
                   COUNT(DISTINCT(c.id)) AS totalClients,
-                  COUNT(b.id) FILTER (WHERE b.status = 'APPROVED') AS pendingServices,
-                  COUNT(b.id) FILTER (WHERE b.status = 'WORKING') AS workingServices,
+                  COUNT(DISTINCT(b.id)) FILTER (WHERE b.status = 'APPROVED') AS pendingServices,
+                  COUNT(DISTINCT(b.id)) FILTER (WHERE b.status = 'WORKING') AS workingServices,
                   SUM(i.price_un * i.quantity) FILTER (WHERE b.status = 'DONE') AS totalRecieved
                 FROM budgets b
                 RIGHT JOIN clients c ON b.client_id = c.id

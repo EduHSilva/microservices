@@ -1,0 +1,14 @@
+package com.silva.edu.finances.controllers;
+
+
+import com.edu.silva.common.DefaultResponse;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class PingController {
+    @GetMapping("/ping")
+    public DefaultResponse index() {
+        return new DefaultResponse("pong");
+    }
+}
