@@ -1,8 +1,8 @@
 package com.silva.edu.finances.controllers;
 
 import com.edu.silva.common.DefaultResponse;
-import com.silva.edu.finances.domain.dtos.request.AddTransactionDTO;
-import com.silva.edu.finances.domain.dtos.request.UpdateTransactionDTO;
+import com.silva.edu.finances.domain.dtos.request.AddTransactionRequestDTO;
+import com.silva.edu.finances.domain.dtos.request.UpdateTransactionRequestDTO;
 import com.silva.edu.finances.domain.dtos.response.TransactionResponseDTO;
 import com.silva.edu.finances.services.TransactionService;
 import jakarta.validation.Valid;
@@ -39,7 +39,7 @@ public class TransactionController {
     }
 
     @PostMapping(BASE_URL)
-    ResponseEntity<@NonNull DefaultResponse> save(@RequestBody @Valid AddTransactionDTO dto) {
+    ResponseEntity<@NonNull DefaultResponse> save(@RequestBody @Valid AddTransactionRequestDTO dto) {
         TransactionResponseDTO t = service.save(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new DefaultResponse("Transaction successfully saved", t, BASE_URL, t.getId())
@@ -47,7 +47,7 @@ public class TransactionController {
     }
 
     @PutMapping(BASE_URL + "/{id}")
-    ResponseEntity<@NonNull DefaultResponse> replace(@RequestBody @Valid UpdateTransactionDTO request, @PathVariable UUID id) {
+    ResponseEntity<@NonNull DefaultResponse> replace(@RequestBody @Valid UpdateTransactionRequestDTO request, @PathVariable UUID id) {
         return ResponseEntity.ok(new DefaultResponse("Transaction successfully updated", service.update(id, request), BASE_URL, id));
     }
 

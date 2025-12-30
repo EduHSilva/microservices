@@ -1,5 +1,6 @@
 package com.silva.edu.finances.domain.entities;
 
+import com.silva.edu.finances.domain.enums.CategoryClassification;
 import com.silva.edu.finances.domain.enums.CategoryStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,10 +19,10 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "transaction_category")
-@SQLDelete(sql = "UPDATE transaction_category SET status = 'DELETED' WHERE id=?")
+@Table(name = "category")
+@SQLDelete(sql = "UPDATE category SET status = 'DELETED' WHERE id=?")
 @SQLRestriction("status <> 'DELETED'")
-public class TransactionCategory implements Serializable {
+public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -32,5 +33,8 @@ public class TransactionCategory implements Serializable {
     private String title;
     @Enumerated(EnumType.STRING)
     private CategoryStatus status;
-
+    private String color;
+    private int goal;
+    @Enumerated(EnumType.STRING)
+    private CategoryClassification classification;
 }

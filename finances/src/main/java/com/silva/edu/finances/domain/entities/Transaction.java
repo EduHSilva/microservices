@@ -35,5 +35,5 @@ public class Transaction implements Serializable {
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
     @ManyToOne
-    private TransactionCategory category;
+    private Category category;
 }

@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<@NonNull DefaultResponse> replace(@RequestBody @Valid UpdateUserRequestDTO request, @PathVariable UUID id) {
+    ResponseEntity<@NonNull DefaultResponse> update(@RequestBody @Valid UpdateUserRequestDTO request, @PathVariable UUID id) {
         return ResponseEntity.ok(new DefaultResponse("User successfully updated", service.update(id, request), BASE_URL, id));
     }
 

@@ -1,7 +1,7 @@
 package com.silva.edu.finances.services.impl;
 
-import com.silva.edu.finances.domain.dtos.request.AddTransactionDTO;
-import com.silva.edu.finances.domain.dtos.request.UpdateTransactionDTO;
+import com.silva.edu.finances.domain.dtos.request.AddTransactionRequestDTO;
+import com.silva.edu.finances.domain.dtos.request.UpdateTransactionRequestDTO;
 import com.silva.edu.finances.domain.dtos.response.TransactionResponseDTO;
 import com.silva.edu.finances.domain.entities.Transaction;
 import com.silva.edu.finances.domain.enums.TransactionStatus;
@@ -27,7 +27,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionResponseDTO save(AddTransactionDTO request) {
+    public TransactionResponseDTO save(AddTransactionRequestDTO request) {
         Transaction transaction = new Transaction();
         BeanUtils.copyProperties(transaction, request);
         transaction.setStatus(TransactionStatus.OK);
@@ -53,7 +53,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionResponseDTO update(UUID id, UpdateTransactionDTO request) {
+    public TransactionResponseDTO update(UUID id, UpdateTransactionRequestDTO request) {
         return repository.findById(id)
                 .map(transaction -> {
                     transaction.setValue(request.value());
