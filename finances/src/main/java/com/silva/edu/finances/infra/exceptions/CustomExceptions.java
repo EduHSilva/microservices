@@ -6,4 +6,10 @@ public class CustomExceptions {
             super(String.format("%s não encontrado: %s", entityName, id));
         }
     }
+
+    public static class InvalidInstallmentsException extends RuntimeException {
+        public InvalidInstallmentsException() {
+            super("Para o tipo INSTALMENTS deve informar as parcelas");
+        }
+    }
 }

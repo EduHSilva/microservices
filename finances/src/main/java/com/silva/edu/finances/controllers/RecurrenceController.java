@@ -1,0 +1,63 @@
+package com.silva.edu.finances.controllers;
+
+import com.edu.silva.common.DefaultResponse;
+import com.silva.edu.finances.domain.dtos.request.AddCategoryRequestDTO;
+import com.silva.edu.finances.domain.dtos.request.AddRecurrenceRequestDTO;
+import com.silva.edu.finances.domain.dtos.request.UpdateCategoryRequestDTO;
+import com.silva.edu.finances.domain.dtos.request.UpdateRecurrenceRequestDTO;
+import com.silva.edu.finances.domain.dtos.response.CategoryResponseDTO;
+import com.silva.edu.finances.domain.dtos.response.RecurrenceResponseDTO;
+import com.silva.edu.finances.services.CategoryService;
+import com.silva.edu.finances.services.RecurrenceService;
+import jakarta.validation.Valid;
+import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+@RestController
+public class RecurrenceController {
+    private final RecurrenceService service;
+
+    private final String BASE_URL = "/recurrences";
+
+    RecurrenceController(RecurrenceService service) {
+        this.service = service;
+    }
+
+    @GetMapping(BASE_URL)
+    ResponseEntity<@NonNull DefaultResponse> all(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<@NonNull RecurrenceResponseDTO> t = service.findAll(page, size);
+        return ResponseEntity.ok(new DefaultResponse("Find all recurrence successfully", t, BASE_URL));
+    }
+
+    @GetMapping(BASE_URL + "/{id}")
+    ResponseEntity<@NonNull DefaultResponse> one(@PathVariable UUID id) {
+        return ResponseEntity.ok(new DefaultResponse("Recurrence find successfully", service.findById(id), BASE_URL, id));
+    }
+
+    @PostMapping(BASE_URL)
+    ResponseEntity<@NonNull DefaultResponse> save(@RequestBody @Valid AddRecurrenceRequestDTO dto) {
+        RecurrenceResponseDTO t = service.save(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new DefaultResponse("Recurrence successfully saved", t, BASE_URL, t.getId())
+        );
+    }
+
+    @PutMapping(BASE_URL + "/{id}")
+    ResponseEntity<@NonNull DefaultResponse> replace(@RequestBody @Valid UpdateRecurrenceRequestDTO request, @PathVariable UUID id) {
+        return ResponseEntity.ok(new DefaultResponse("Recurrence successfully updated", service.update(id, request), BASE_URL, id));
+    }
+
+    @DeleteMapping(BASE_URL + "/{id}")
+    ResponseEntity<@NonNull DefaultResponse> delete(@PathVariable UUID id) {
+        service.delete(id);
+        return ResponseEntity.ok(new DefaultResponse("Recurrence successfully deleted"));
+    }
+}

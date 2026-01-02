@@ -1,6 +1,7 @@
 package com.silva.edu.finances.domain.entities;
 
-import com.silva.edu.finances.domain.enums.TransactionStatus;
+import com.silva.edu.finances.domain.enums.RecurrenceStatus;
+import com.silva.edu.finances.domain.enums.RecurrenceType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,10 +19,10 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "transaction")
-@SQLDelete(sql = "UPDATE transaction SET status = 'DELETED' WHERE id=?")
+@Table(name = "recurrences")
+@SQLDelete(sql = "UPDATE recurrences SET status = 'DELETED' WHERE id=?")
 @SQLRestriction("status <> 'DELETED'")
-public class Transaction implements Serializable {
+public class Recurrence implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -29,13 +30,16 @@ public class Transaction implements Serializable {
     private Date createdDate;
     @UpdateTimestamp
     private Date updatedDate;
-    private Date executionDate;
     private String title;
-    private Double value;
-    @Enumerated(EnumType.STRING)
-    private TransactionStatus status;
+    private int day;
+    private double value;
+    private boolean income;
     @ManyToOne
     private Category category;
-    @ManyToOne
-    private Recurrence recurrence;
+    @Enumerated(EnumType.STRING)
+    private RecurrenceType type;
+    private Integer installments;
+    private Integer payed;
+    @Enumerated(EnumType.STRING)
+    private RecurrenceStatus status;
 }
