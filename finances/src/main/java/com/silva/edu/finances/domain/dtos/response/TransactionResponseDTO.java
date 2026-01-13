@@ -1,11 +1,13 @@
 package com.silva.edu.finances.domain.dtos.response;
 
 import com.silva.edu.finances.domain.entities.Transaction;
+import com.silva.edu.finances.domain.enums.TransactionStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -13,9 +15,21 @@ import java.util.UUID;
 @NoArgsConstructor
 public class TransactionResponseDTO {
     private UUID id;
+    private boolean income;
+    private double value;
+    private String category;
+    private String classification;
+    private String recurrence;
+    private Date executionDate;
+    private String title;
+    private TransactionStatus status;
 
     public TransactionResponseDTO(Transaction transaction) {
         BeanUtils.copyProperties(transaction, this);
+        this.category = transaction.getCategory().getTitle();
+        this.classification = transaction.getCategory().getClassification().name();
+        if (transaction.getRecurrence() != null) {
+            this.recurrence = transaction.getRecurrence().getTitle();
+        }
     }
-
 }

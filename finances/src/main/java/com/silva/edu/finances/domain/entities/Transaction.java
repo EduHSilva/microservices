@@ -31,7 +31,7 @@ public class Transaction implements Serializable {
     private Date updatedDate;
     private Date executionDate;
     private String title;
-    private Double value;
+    private double value;
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
     @ManyToOne
