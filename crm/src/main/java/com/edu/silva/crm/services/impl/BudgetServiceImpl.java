@@ -97,6 +97,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    @Transactional
     public BudgetResponseDTO update(UUID id, UpdateBudgetRequestDTO dto) {
         return new BudgetResponseDTO(repository.findById(id)
                 .map(budget -> {
@@ -106,6 +107,16 @@ public class BudgetServiceImpl implements BudgetService {
                     budget.setValidate(dto.validate());
                     budget.setTerms(dto.terms());
                     budget.setObservations(dto.observations());
+
+                    if (dto.kanbanOrder() != null && !dto.kanbanOrder().equals(budget.getKanbanOrder())) {
+                        repository.shiftOrders(
+                                budget.getStatus(),
+                                dto.kanbanOrder(),
+                                budget.getId()
+                        );
+
+                        budget.setKanbanOrder(dto.kanbanOrder());
+                    }
 
                     Map<UUID, Item> existing = budget.getItems().stream()
                             .collect(Collectors.toMap(Item::getId, i -> i));

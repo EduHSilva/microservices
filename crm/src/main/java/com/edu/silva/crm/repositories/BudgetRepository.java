@@ -2,10 +2,13 @@ package com.edu.silva.crm.repositories;
 
 import com.edu.silva.crm.domain.entities.Budget;
 import com.edu.silva.crm.domain.enums.BudgetStatus;
+import feign.Param;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,5 +23,19 @@ public interface BudgetRepository extends JpaRepository<@NonNull Budget, @NonNul
 
     List<Budget> findTop5ByOrderByCreatedDateDesc();
 
-    List<Budget> findByStatus(BudgetStatus status);
+    List<Budget> findByStatusOrderByKanbanOrder(BudgetStatus status);
+
+    @Modifying
+    @Query("""
+               UPDATE Budget b
+               SET b.kanbanOrder = b.kanbanOrder + 1
+               WHERE b.status = :status
+                 AND b.kanbanOrder >= :order
+                 AND b.id <> :id
+            """)
+    void shiftOrders(
+            @Param("status") BudgetStatus status,
+            @Param("order") Integer order,
+            @Param("id") UUID id
+    );
 }

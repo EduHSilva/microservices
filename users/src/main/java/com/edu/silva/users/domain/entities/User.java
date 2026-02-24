@@ -42,6 +42,7 @@ public class User implements UserDetails {
     private UserStatus status;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    private String tokenChangePassword;
 
     public User(String username, String email, String password, UserRole role) {
         this.username = username;

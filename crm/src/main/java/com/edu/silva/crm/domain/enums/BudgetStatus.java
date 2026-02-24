@@ -5,7 +5,6 @@ import lombok.Getter;
 @Getter
 public enum BudgetStatus {
     DRAFT("draft"),
-    SEND("send"),
     WAITING("waiting"),
     APPROVED("approved"),
     WORKING("working"),

@@ -55,9 +55,9 @@ public class DashboardServiceImpl implements DashboardService {
     @Override
     public DashboardKanbanResponseDTO getDataKanban() {
         DashboardKanbanResponseDTO dto = new DashboardKanbanResponseDTO();
-        List<Budget> news = repository.findByStatus(BudgetStatus.APPROVED);
-        List<Budget> working = repository.findByStatus(BudgetStatus.WORKING);
-        List<Budget> done = repository.findByStatus(BudgetStatus.DONE);
+        List<Budget> news = repository.findByStatusOrderByKanbanOrder(BudgetStatus.APPROVED);
+        List<Budget> working = repository.findByStatusOrderByKanbanOrder(BudgetStatus.WORKING);
+        List<Budget> done = repository.findByStatusOrderByKanbanOrder(BudgetStatus.DONE);
         dto.setNews(news.stream().map(BudgetResponseDTO::new).toList());
         dto.setWorking(working.stream().map(BudgetResponseDTO::new).toList());
         dto.setDone(done.stream().map(BudgetResponseDTO::new).toList());

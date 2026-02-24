@@ -12,6 +12,7 @@ public record UpdateBudgetRequestDTO(
         List<ItemDTO> items,
         String terms,
         String observations,
-        BudgetStatus status
+        BudgetStatus status,
+        Integer kanbanOrder
 ) {
 }
