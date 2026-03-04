@@ -41,14 +41,14 @@ services:
     ports:
       - "8383:8383"
 
-  email:
-    build: ./email
-    container_name: email
+  notifications:
+    build: ./notifications
+    container_name: notifications
     depends_on:
       - service-discover
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://host.docker.internal:5432/email"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://host.docker.internal:5432/notifications"
     ports:
       - "8484:8484"
 
@@ -62,6 +62,17 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:postgresql://host.docker.internal:5432/finances"
     ports:
       - "8989:8989"
+
+  tasks:
+    build: ./tasks
+    container_name: tasks
+    depends_on:
+      - service-discover
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://host.docker.internal:5432/tasks"
+    ports:
+      - "8686:8686"
 
   gateway:
     build: ./gateway
