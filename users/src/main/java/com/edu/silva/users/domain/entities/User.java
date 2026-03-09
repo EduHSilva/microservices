@@ -3,6 +3,7 @@ package com.edu.silva.users.domain.entities;
 import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.domain.enums.UserStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Entity
@@ -40,20 +38,20 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserStatus status;
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
-    private String tokenChangePassword;
+    private List<UserRole> roles = new ArrayList<>();
+    @ManyToOne
+    private Company company;
 
-    public User(String username, String email, String password, UserRole role) {
+    public User(String username, String email, String password, List<UserRole> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.roles = roles;
     }
 
     @Override
     public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
-        if (role == UserRole.ADMIN) {
+        if (roles.contains(UserRole.ADMIN)) {
             return List.of(
                     new SimpleGrantedAuthority("ROLE_ADMIN"),
                     new SimpleGrantedAuthority("ROLE_USER")

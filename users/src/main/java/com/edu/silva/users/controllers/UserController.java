@@ -4,12 +4,15 @@ import com.edu.silva.common.DefaultResponse;
 import com.edu.silva.users.domain.dtos.requests.RegisterRequestDTO;
 import com.edu.silva.users.domain.dtos.requests.UpdateUserRequestDTO;
 import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
+import com.edu.silva.users.domain.entities.User;
 import com.edu.silva.users.services.UserService;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -28,9 +31,10 @@ public class UserController {
     @GetMapping()
     ResponseEntity<@NonNull DefaultResponse> all(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal User user
     ) {
-        Page<@NonNull UserResponseDTO> users = service.findAll(page, size);
+        Page<@NonNull UserResponseDTO> users = service.findAll(page, size, user);
         return ResponseEntity.ok(new DefaultResponse("Find all users successfully", users, BASE_URL));
     }
 

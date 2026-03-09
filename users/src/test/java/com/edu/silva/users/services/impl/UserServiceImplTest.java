@@ -3,18 +3,26 @@ package com.edu.silva.users.services.impl;
 import com.edu.silva.users.domain.dtos.requests.RegisterRequestDTO;
 import com.edu.silva.users.domain.dtos.requests.UpdateUserRequestDTO;
 import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
+import com.edu.silva.users.domain.entities.Company;
 import com.edu.silva.users.domain.entities.User;
 import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.domain.enums.UserStatus;
 import com.edu.silva.users.domain.producers.UserProducer;
 import com.edu.silva.users.infra.exceptions.CustomExceptions;
+import com.edu.silva.users.repositories.CompanyRepository;
 import com.edu.silva.users.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,6 +34,8 @@ class UserServiceImplTest {
 
     @Mock
     private UserRepository repository;
+    @Mock
+    private CompanyRepository companyRepository;
 
     @Mock
     private UserProducer producer;
@@ -41,7 +51,7 @@ class UserServiceImplTest {
     @Test
     void shouldSaveUserSuccessfully() {
         RegisterRequestDTO dto = new RegisterRequestDTO(
-                "edu@test.com", "Eduardo", "123", UserRole.CRM
+                "edu@test.com", "Eduardo", "123", UserRole.CRM, null
         );
 
         when(repository.findByEmail("edu@test.com")).thenReturn(null);
@@ -57,9 +67,42 @@ class UserServiceImplTest {
     }
 
     @Test
+    void shouldSaveUserSuccessfullyWithCompany() {
+        UUID companyID = UUID.randomUUID();
+        Company company = new Company();
+        company.setId(companyID);
+        RegisterRequestDTO dto = new RegisterRequestDTO(
+                "edu@test.com", "Eduardo", "123", UserRole.CRM, companyID
+        );
+
+        when(repository.findByEmail("edu@test.com")).thenReturn(null);
+        when(companyRepository.findById(companyID)).thenReturn(Optional.of(company));
+        when(repository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        UserResponseDTO saved = service.save(dto);
+
+        assertEquals("Eduardo", saved.getUsername());
+        assertEquals(UserStatus.WAITING_CONFIRMATION, saved.getStatus());
+
+        verify(producer, times(1)).publishMessageEmail(any(User.class));
+        verify(repository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void shouldThrowWhenCompanyNotFound() {
+        RegisterRequestDTO dto = new RegisterRequestDTO(
+                "edu@test.com", "Eduardo", "123", UserRole.CRM, UUID.randomUUID()
+        );
+
+        when(companyRepository.findById(UUID.randomUUID())).thenReturn(Optional.empty());
+
+        assertThrows(CustomExceptions.EntityNotFoundException.class, () -> service.save(dto));
+    }
+
+    @Test
     void shouldThrowWhenEmailAlreadyExists() {
         RegisterRequestDTO dto = new RegisterRequestDTO(
-                "edu@test.com", "Eduardo", "123", UserRole.CRM
+                "edu@test.com", "Eduardo", "123", UserRole.CRM, null
         );
 
         when(repository.findByEmail("edu@test.com")).thenReturn(new User());
@@ -70,7 +113,7 @@ class UserServiceImplTest {
     @Test
     void shouldThrowWhenUserRegistersAsAdmin() {
         RegisterRequestDTO dto = new RegisterRequestDTO(
-                "Eduardo", "edu@test.com", "123", UserRole.ADMIN
+                "Eduardo", "edu@test.com", "123", UserRole.ADMIN, null
         );
 
         assertThrows(CustomExceptions.InvalidRoleException.class, () -> service.save(dto));
@@ -79,7 +122,7 @@ class UserServiceImplTest {
     @Test
     void shouldReturnUserWhenFound() {
         UUID id = UUID.randomUUID();
-        User user = new User("Eduardo", "edu@test.com", "123", UserRole.CRM);
+        User user = new User("Eduardo", "edu@test.com", "123", Collections.singletonList(UserRole.CRM));
         when(repository.findById(id)).thenReturn(Optional.of(user));
 
         UserResponseDTO result = service.findById(id);
@@ -98,7 +141,7 @@ class UserServiceImplTest {
     void shouldUpdateUser() {
         UUID id = UUID.randomUUID();
 
-        User user = new User("Old", "old@test.com", "123", UserRole.CRM);
+        User user = new User("Old", "old@test.com", "123", Collections.singletonList(UserRole.CRM));
         UpdateUserRequestDTO req = new UpdateUserRequestDTO("NewName");
 
         when(repository.findById(id)).thenReturn(Optional.of(user));
@@ -122,7 +165,7 @@ class UserServiceImplTest {
     @Test
     void shouldConfirmUserSuccessfully() {
         UUID id = UUID.randomUUID();
-        User user = new User("Edu", "edu@test.com", "123", UserRole.CRM);
+        User user = new User("Edu", "edu@test.com", "123", Collections.singletonList(UserRole.CRM));
         user.setStatus(UserStatus.WAITING_CONFIRMATION);
 
         when(repository.findById(id)).thenReturn(Optional.of(user));
@@ -136,11 +179,66 @@ class UserServiceImplTest {
     @Test
     void shouldNotConfirmWhenStatusInvalid() {
         UUID id = UUID.randomUUID();
-        User user = new User("Edu", "edu@test.com", "123", UserRole.CRM);
+        User user = new User("Edu", "edu@test.com", "123", Collections.singletonList(UserRole.CRM));
         user.setStatus(UserStatus.OK);
 
         when(repository.findById(id)).thenReturn(Optional.of(user));
 
         assertThrows(CustomExceptions.InvalidStatusException.class, () -> service.confirm(id));
+    }
+
+    @Test
+    void shouldDeleteUserById() {
+        UUID id = UUID.randomUUID();
+
+        service.delete(id);
+
+        verify(repository, times(1)).deleteById(id);
+    }
+
+    @Test
+    void shouldReturnPagedUsers() {
+        int page = 0;
+        int size = 2;
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        User user1 = new User();
+        User user2 = new User();
+
+        List<User> users = List.of(user1, user2);
+
+        Page<User> userPage = new PageImpl<>(users, pageable, users.size());
+
+        when(repository.findAll(pageable)).thenReturn(userPage);
+
+        User user = new User();
+        user.getRoles().add(UserRole.ADMIN);
+        Page<UserResponseDTO> result = service.findAll(page, size, user);
+
+        assertEquals(2, result.getContent().size());
+        verify(repository).findAll(pageable);
+    }
+
+    @Test
+    void shouldAccessError() {
+        int page = 0;
+        int size = 2;
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        User user1 = new User();
+        User user2 = new User();
+
+        List<User> users = List.of(user1, user2);
+
+        Page<User> userPage = new PageImpl<>(users, pageable, users.size());
+
+        when(repository.findAll(pageable)).thenReturn(userPage);
+
+        User user = new User();
+        user.getRoles().add(UserRole.CRM);
+
+        assertThrows(CustomExceptions.InvalidRoleException.class, () -> service.findAll(page, size, user));
     }
 }
