@@ -12,6 +12,7 @@ import com.edu.silva.users.domain.producers.UserProducer;
 import com.edu.silva.users.infra.exceptions.CustomExceptions;
 import com.edu.silva.users.repositories.CompanyRepository;
 import com.edu.silva.users.repositories.UserRepository;
+import com.edu.silva.users.infra.security.annotattions.OnlyAdmin;
 import com.edu.silva.users.services.UserService;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
@@ -76,10 +77,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<@NonNull UserResponseDTO> findAll(int page, int size, User user) {
-        if (!user.getRoles().contains(UserRole.ADMIN)) {
-            throw new CustomExceptions.InvalidRoleException("User does not have ADMIN role");
-        }
+    @OnlyAdmin
+    public Page<@NonNull UserResponseDTO> findAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return repository.findAll(pageable).map(UserResponseDTO::new);
     }

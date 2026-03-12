@@ -16,6 +16,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username);
+        UserDetails user = userRepository.findByEmail(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email: " + username);
+        }
+
+        return user;
     }
 }

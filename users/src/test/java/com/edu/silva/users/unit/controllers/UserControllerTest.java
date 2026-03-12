@@ -1,5 +1,6 @@
-package com.edu.silva.users.controllers;
+package com.edu.silva.users.unit.controllers;
 
+import com.edu.silva.users.controllers.UserController;
 import com.edu.silva.users.domain.dtos.requests.RegisterRequestDTO;
 import com.edu.silva.users.domain.dtos.requests.UpdateUserRequestDTO;
 import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
@@ -43,9 +44,7 @@ class UserControllerTest {
         Page<UserResponseDTO> page =
                 new PageImpl<>(users, PageRequest.of(0, 10), users.size());
 
-        User user = new User();
-
-        when(service.findAll(0, 10, user)).thenReturn(page);
+        when(service.findAll(0, 10)).thenReturn(page);
 
         client.get()
                 .uri("/")

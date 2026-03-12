@@ -1,0 +1,15 @@
+package com.edu.silva.users.infra.security.annotattions;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@PreAuthorize("@ownerSecurity.isOwnerOrAdmin(#id)")
+public @interface OnlyOwner {
+}
+

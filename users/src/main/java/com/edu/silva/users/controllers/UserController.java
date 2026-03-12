@@ -24,17 +24,16 @@ public class UserController {
 
     private final String BASE_URL = "/users";
 
-    UserController(UserService userService) {
+    public UserController(UserService userService) {
         this.service = userService;
     }
 
     @GetMapping()
     ResponseEntity<@NonNull DefaultResponse> all(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @AuthenticationPrincipal User user
+            @RequestParam(defaultValue = "10") int size
     ) {
-        Page<@NonNull UserResponseDTO> users = service.findAll(page, size, user);
+        Page<@NonNull UserResponseDTO> users = service.findAll(page, size);
         return ResponseEntity.ok(new DefaultResponse("Find all users successfully", users, BASE_URL));
     }
 

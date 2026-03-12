@@ -15,7 +15,7 @@ public interface UserService {
 
     void delete(UUID id);
 
-    Page<@NonNull UserResponseDTO> findAll(int page, int size, User user);
+    Page<@NonNull UserResponseDTO> findAll(int page, int size);
 
     UserResponseDTO findById(UUID id);
 

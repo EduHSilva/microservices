@@ -36,12 +36,17 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<@NonNull DefaultResponse> login(@RequestBody @Valid AuthRequestDTO dto) {
         UsernamePasswordAuthenticationToken userNamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
-        Authentication authentication = authenticationManager.authenticate(userNamePassword);
-        User user = (User) authentication.getPrincipal();
-        if (user == null) return ResponseEntity.badRequest().build();
-        String token = tokenService.generateToken(user);
+        try {
+            Authentication authentication = authenticationManager.authenticate(userNamePassword);
+            User user = (User) authentication.getPrincipal();
+            if (user == null) return ResponseEntity.status(401).build();
+            String token = tokenService.generateToken(user);
 
-        LoginResponseDTO loginResponseDTO = new LoginResponseDTO(user.getId(), user.getUsername(), user.getEmail(), token);
-        return ResponseEntity.ok(new DefaultResponse("Auth successfully verified", loginResponseDTO));
+            LoginResponseDTO loginResponseDTO = new LoginResponseDTO(user.getId(), user.getUsername(), user.getEmail(), token);
+            return ResponseEntity.ok(new DefaultResponse("Auth successfully verified", loginResponseDTO));
+        } catch (Exception e) {
+            //
+        }
+        return ResponseEntity.status(401).build();
     }
 }

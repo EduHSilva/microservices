@@ -11,6 +11,7 @@ import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +35,7 @@ public class Company implements Serializable {
     @Enumerated(EnumType.STRING)
     private Status status;
     @OneToMany
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
     @OneToOne
     private User owner;
 }

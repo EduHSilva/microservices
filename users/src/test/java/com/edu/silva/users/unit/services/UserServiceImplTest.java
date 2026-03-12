@@ -1,4 +1,4 @@
-package com.edu.silva.users.services.impl;
+package com.edu.silva.users.unit.services;
 
 import com.edu.silva.users.domain.dtos.requests.RegisterRequestDTO;
 import com.edu.silva.users.domain.dtos.requests.UpdateUserRequestDTO;
@@ -11,6 +11,7 @@ import com.edu.silva.users.domain.producers.UserProducer;
 import com.edu.silva.users.infra.exceptions.CustomExceptions;
 import com.edu.silva.users.repositories.CompanyRepository;
 import com.edu.silva.users.repositories.UserRepository;
+import com.edu.silva.users.services.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -214,31 +215,9 @@ class UserServiceImplTest {
 
         User user = new User();
         user.getRoles().add(UserRole.ADMIN);
-        Page<UserResponseDTO> result = service.findAll(page, size, user);
+        Page<UserResponseDTO> result = service.findAll(page, size);
 
         assertEquals(2, result.getContent().size());
         verify(repository).findAll(pageable);
-    }
-
-    @Test
-    void shouldAccessError() {
-        int page = 0;
-        int size = 2;
-
-        Pageable pageable = PageRequest.of(page, size);
-
-        User user1 = new User();
-        User user2 = new User();
-
-        List<User> users = List.of(user1, user2);
-
-        Page<User> userPage = new PageImpl<>(users, pageable, users.size());
-
-        when(repository.findAll(pageable)).thenReturn(userPage);
-
-        User user = new User();
-        user.getRoles().add(UserRole.CRM);
-
-        assertThrows(CustomExceptions.InvalidRoleException.class, () -> service.findAll(page, size, user));
     }
 }
