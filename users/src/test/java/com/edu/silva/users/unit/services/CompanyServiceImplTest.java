@@ -1,12 +1,8 @@
 package com.edu.silva.users.unit.services;
 
 import com.edu.silva.users.domain.dtos.requests.UpdateCompanyRequestDTO;
-import com.edu.silva.users.domain.dtos.requests.UpdateUserRequestDTO;
 import com.edu.silva.users.domain.dtos.responses.CompanyResponseDTO;
-import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
 import com.edu.silva.users.domain.entities.Company;
-import com.edu.silva.users.domain.entities.User;
-import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.infra.exceptions.CustomExceptions;
 import com.edu.silva.users.repositories.CompanyRepository;
 import com.edu.silva.users.services.impl.CompanyServiceImpl;
@@ -20,7 +16,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

@@ -2,6 +2,7 @@ package com.edu.silva.users.services.impl;
 
 import com.edu.silva.users.repositories.UserRepository;
 import com.edu.silva.users.services.AuthService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         UserDetails user = userRepository.findByEmail(username);
 
         if (user == null) {

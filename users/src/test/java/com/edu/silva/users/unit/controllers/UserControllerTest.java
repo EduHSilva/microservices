@@ -4,7 +4,6 @@ import com.edu.silva.users.controllers.UserController;
 import com.edu.silva.users.domain.dtos.requests.RegisterRequestDTO;
 import com.edu.silva.users.domain.dtos.requests.UpdateUserRequestDTO;
 import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
-import com.edu.silva.users.domain.entities.User;
 import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.services.UserService;
 import org.apache.commons.lang.RandomStringUtils;

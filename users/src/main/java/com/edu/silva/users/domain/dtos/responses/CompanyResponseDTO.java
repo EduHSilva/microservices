@@ -1,9 +1,6 @@
 package com.edu.silva.users.domain.dtos.responses;
 
 import com.edu.silva.users.domain.entities.Company;
-import com.edu.silva.users.domain.entities.User;
-import com.edu.silva.users.domain.enums.UserRole;
-import com.edu.silva.users.domain.enums.UserStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,23 +1,14 @@
 package com.edu.silva.users.unit.controllers;
 
 import com.edu.silva.users.controllers.AuthController;
-import com.edu.silva.users.controllers.CompanyController;
 import com.edu.silva.users.domain.dtos.requests.AuthRequestDTO;
-import com.edu.silva.users.domain.dtos.requests.UpdateCompanyRequestDTO;
-import com.edu.silva.users.domain.dtos.responses.CompanyResponseDTO;
 import com.edu.silva.users.domain.entities.User;
 import com.edu.silva.users.infra.security.TokenService;
-import com.edu.silva.users.services.CompanyService;
-import org.apache.commons.lang.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,8 +17,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.client.RestTestClient;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
