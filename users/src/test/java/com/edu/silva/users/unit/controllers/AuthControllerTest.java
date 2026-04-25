@@ -2,8 +2,13 @@ package com.edu.silva.users.unit.controllers;
 
 import com.edu.silva.users.controllers.AuthController;
 import com.edu.silva.users.domain.dtos.requests.AuthRequestDTO;
+import com.edu.silva.users.domain.dtos.requests.RegisterRequestDTO;
+import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
 import com.edu.silva.users.domain.entities.User;
+import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.infra.security.TokenService;
+import com.edu.silva.users.services.UserService;
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,11 +35,14 @@ class AuthControllerTest {
     private TokenService service;
 
     @Mock
+    private UserService userService;
+
+    @Mock
     private AuthenticationManager manager;
 
     @BeforeEach
     void setUp() {
-        client = RestTestClient.bindToController(new AuthController(manager, service))
+        client = RestTestClient.bindToController(new AuthController(manager, service, userService))
                 .defaultHeader("ContentType", "application/json")
                 .build();
     }
@@ -82,5 +90,22 @@ class AuthControllerTest {
                 .uri("/auth/me")
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void shouldSaveUser() {
+        RegisterRequestDTO requestDTO = new RegisterRequestDTO(
+                "admin@gmail.com", RandomStringUtils.random(10),
+                RandomStringUtils.random(10), UserRole.CRM, null);
+        when(userService.save(requestDTO)).thenReturn(new UserResponseDTO());
+
+        client.post()
+                .uri("/auth/register")
+                .body(requestDTO)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("User successfully saved")
+                .jsonPath("$.data").isNotEmpty();
     }
 }

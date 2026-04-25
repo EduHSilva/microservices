@@ -37,3 +37,4 @@ build/
 *-prod.properties
 **/*-docker.properties
 *.sql
+*.http

@@ -4,10 +4,7 @@ import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.domain.enums.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -38,7 +35,9 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+    @Enumerated(EnumType.STRING)
     private List<UserRole> roles = new ArrayList<>();
+    @ToString.Exclude
     @ManyToOne
     private Company company;
 

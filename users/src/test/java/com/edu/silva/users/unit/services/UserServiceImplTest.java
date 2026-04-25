@@ -12,6 +12,7 @@ import com.edu.silva.users.infra.exceptions.CustomExceptions;
 import com.edu.silva.users.repositories.CompanyRepository;
 import com.edu.silva.users.repositories.UserRepository;
 import com.edu.silva.users.services.impl.UserServiceImpl;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -124,6 +125,9 @@ class UserServiceImplTest {
     void shouldReturnUserWhenFound() {
         UUID id = UUID.randomUUID();
         User user = new User("Eduardo", "edu@test.com", "123", Collections.singletonList(UserRole.CRM));
+        Company company = new Company();
+        company.setName("test");
+        user.setCompany(company);
         when(repository.findById(id)).thenReturn(Optional.of(user));
 
         UserResponseDTO result = service.findById(id);
@@ -143,6 +147,9 @@ class UserServiceImplTest {
         UUID id = UUID.randomUUID();
 
         User user = new User("Old", "old@test.com", "123", Collections.singletonList(UserRole.CRM));
+        Company company = new Company();
+        company.setName("Teste");
+        user.setCompany(company);
         UpdateUserRequestDTO req = new UpdateUserRequestDTO("NewName");
 
         when(repository.findById(id)).thenReturn(Optional.of(user));
@@ -168,7 +175,9 @@ class UserServiceImplTest {
         UUID id = UUID.randomUUID();
         User user = new User("Edu", "edu@test.com", "123", Collections.singletonList(UserRole.CRM));
         user.setStatus(UserStatus.WAITING_CONFIRMATION);
-
+        Company company = new Company();
+        company.setName("test");
+        user.setCompany(company);
         when(repository.findById(id)).thenReturn(Optional.of(user));
         when(repository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -207,6 +216,10 @@ class UserServiceImplTest {
         User user1 = new User();
         User user2 = new User();
 
+        Company company = new Company();
+        company.setName("test");
+        user1.setCompany(company);
+        user2.setCompany(company);
         List<User> users = List.of(user1, user2);
 
         Page<User> userPage = new PageImpl<>(users, pageable, users.size());

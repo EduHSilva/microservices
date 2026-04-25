@@ -108,20 +108,5 @@ class UserControllerTest {
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueEquals("Location", "/confirm.html");    }
 
-    @Test
-    void shouldSaveUser() {
-        RegisterRequestDTO requestDTO = new RegisterRequestDTO(
-                "admin@gmail.com", RandomStringUtils.random(10),
-                RandomStringUtils.random(10), UserRole.CRM, null);
-        when(service.save(requestDTO)).thenReturn(new UserResponseDTO());
 
-        client.post()
-                .uri("/")
-                .body(requestDTO)
-                .exchange()
-                .expectStatus().isCreated()
-                .expectBody()
-                .jsonPath("$.message").isEqualTo("User successfully saved")
-                .jsonPath("$.data").isNotEmpty();
-    }
 }

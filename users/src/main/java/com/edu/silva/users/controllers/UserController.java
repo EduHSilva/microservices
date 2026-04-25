@@ -39,14 +39,6 @@ public class UserController {
         return ResponseEntity.ok(new DefaultResponse("User find successfully", service.findById(id), BASE_URL, id));
     }
 
-    @PostMapping()
-    ResponseEntity<@NonNull DefaultResponse> save(@RequestBody @Valid RegisterRequestDTO dto) {
-        UserResponseDTO u = service.save(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new DefaultResponse("User successfully saved", u, BASE_URL, u.getId())
-        );
-    }
-
     @GetMapping(value = "/confirm/{id}")
     public RedirectView confirm(@PathVariable UUID id) {
         service.confirm(id);

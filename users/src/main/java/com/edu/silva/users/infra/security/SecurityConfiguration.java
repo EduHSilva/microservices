@@ -31,11 +31,11 @@ public class SecurityConfiguration {
                         .requestMatchers("/ping").permitAll()
                         .requestMatchers(
                                 HttpMethod.POST,
-                                "/user",
+                                "/**",
                                 "/auth/login/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/user/confirm/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/confirm/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

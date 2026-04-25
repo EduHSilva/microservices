@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+import java.util.Map;
+
 @Component
 public class JwtAuthFilter implements GlobalFilter {
 
@@ -19,12 +22,16 @@ public class JwtAuthFilter implements GlobalFilter {
         this.jwtUtil = jwtUtil;
     }
 
+    Map<String, String> routeRoles = Map.of(
+            "/crm", "ROLE_CRM"
+    );
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         String path = exchange.getRequest().getURI().getPath();
 
-        if (path.startsWith("/ping") || path.startsWith("/v3") ||  path.startsWith("/auth") || path.startsWith("/health")){
+        if (path.startsWith("/ping") || path.startsWith("/auth") || path.startsWith("/health") || path.startsWith("/")) {
             return chain.filter(exchange);
         }
 
@@ -38,10 +45,15 @@ public class JwtAuthFilter implements GlobalFilter {
         String token = authHeader.substring(7);
 
         DecodedJWT jwt = jwtUtil.validateToken(token);
+        List<String> roles = jwt.getClaim("roles").asList(String.class);
 
-        if (jwt == null) {
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+        for (Map.Entry<String, String> entry : routeRoles.entrySet()) {
+            if (path.startsWith(entry.getKey())) {
+                if (roles == null || !roles.contains(entry.getValue())) {
+                    exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+                    return exchange.getResponse().setComplete();
+                }
+            }
         }
 
         String subject = jwt.getSubject();

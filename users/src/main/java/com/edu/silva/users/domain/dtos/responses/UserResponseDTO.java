@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -20,9 +21,12 @@ public class UserResponseDTO {
     private String email;
     private String username;
     private UserStatus status;
-    private UserRole role;
+    private List<UserRole> roles;
+    private String companyName;
 
     public UserResponseDTO(User user) {
         BeanUtils.copyProperties(user, this);
+
+        this.companyName = user.getCompany().getName();
     }
 }
