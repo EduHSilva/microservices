@@ -7,6 +7,7 @@ import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
 import com.edu.silva.users.domain.entities.User;
 import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.infra.security.TokenService;
+import com.edu.silva.users.services.AuthService;
 import com.edu.silva.users.services.UserService;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,14 +43,14 @@ class AuthControllerTest {
 
     @BeforeEach
     void setUp() {
-        client = RestTestClient.bindToController(new AuthController(manager, service, userService))
+        client = RestTestClient.bindToController(new AuthController(userService))
                 .defaultHeader("ContentType", "application/json")
                 .build();
     }
 
     @Test
     void shouldLogin() {
-        AuthRequestDTO request = new AuthRequestDTO("test@email.com", "password123");
+        AuthRequestDTO request = new AuthRequestDTO("test@email.com", "password123", null);
         User user = new User();
 
         Authentication auth = new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
@@ -69,7 +70,7 @@ class AuthControllerTest {
 
     @Test
     void shouldInvalidLogin() {
-        AuthRequestDTO request = new AuthRequestDTO("test@email.com", "password123");
+        AuthRequestDTO request = new AuthRequestDTO("test@email.com", "password123", null);
         User user = new User();
 
         Authentication auth = new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());

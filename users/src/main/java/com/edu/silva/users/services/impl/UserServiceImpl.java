@@ -1,8 +1,10 @@
 package com.edu.silva.users.services.impl;
 
 import com.edu.silva.common.enums.Status;
+import com.edu.silva.users.domain.dtos.requests.AuthRequestDTO;
 import com.edu.silva.users.domain.dtos.requests.RegisterRequestDTO;
 import com.edu.silva.users.domain.dtos.requests.UpdateUserRequestDTO;
+import com.edu.silva.users.domain.dtos.responses.LoginResponseDTO;
 import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
 import com.edu.silva.users.domain.entities.Company;
 import com.edu.silva.users.domain.entities.User;
@@ -10,15 +12,24 @@ import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.domain.enums.UserStatus;
 import com.edu.silva.users.domain.producers.UserProducer;
 import com.edu.silva.users.infra.exceptions.CustomExceptions;
+import com.edu.silva.users.infra.security.TokenService;
+import com.edu.silva.users.infra.security.annotattions.OnlyAdmin;
 import com.edu.silva.users.repositories.CompanyRepository;
 import com.edu.silva.users.repositories.UserRepository;
-import com.edu.silva.users.infra.security.annotattions.OnlyAdmin;
 import com.edu.silva.users.services.UserService;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,14 +40,21 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Value(value = "${google.client-id}")
+    private String clientID;
+
     private final UserRepository repository;
     private final CompanyRepository companyRepository;
     private final UserProducer producer;
+    private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
 
-    public UserServiceImpl(UserRepository userRepository, CompanyRepository companyRepository, UserProducer producer) {
+    public UserServiceImpl(UserRepository userRepository, CompanyRepository companyRepository, UserProducer producer, AuthenticationManager authenticationManager, TokenService tokenService) {
         this.repository = userRepository;
         this.companyRepository = companyRepository;
         this.producer = producer;
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
     }
 
     @Transactional
@@ -111,5 +129,54 @@ public class UserServiceImpl implements UserService {
                     }
                 })
                 .orElseThrow(() -> new CustomExceptions.EntityNotFoundException(User.class.getSimpleName(), id));
+    }
+
+    @Override
+    public LoginResponseDTO login(AuthRequestDTO dto) {
+        User user;
+        if (dto.tokenGmail() != null && !dto.tokenGmail().isEmpty()) {
+            var payload = verifyToken(dto.tokenGmail());
+
+            if (payload == null) {
+                throw new CustomExceptions.InvalidGmailTokenException("Invalid gmail token");
+            }
+
+            String email = payload.getEmail();
+            user = (User) repository.findByEmail(email);
+        } else {
+            UsernamePasswordAuthenticationToken userNamePassword =
+                    new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
+
+            Authentication authentication = authenticationManager.authenticate(userNamePassword);
+            user = (User) authentication.getPrincipal();
+        }
+
+        if (user == null) {
+            throw new CustomExceptions.EntityNotFoundException(User.class.getSimpleName(), dto.email());
+        }
+
+        String token = tokenService.generateToken(user);
+
+        return new LoginResponseDTO(user.getId(), user.getUsername(), user.getEmail(), token);
+    }
+
+    private GoogleIdToken.Payload verifyToken(String token) {
+        try {
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                    new NetHttpTransport(),
+                    GsonFactory.getDefaultInstance()
+            )
+                    .setAudience(Collections.singletonList(clientID))
+                    .build();
+
+            GoogleIdToken idToken = verifier.verify(token);
+
+            if (idToken != null) {
+                return idToken.getPayload();
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 }
