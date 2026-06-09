@@ -27,9 +27,6 @@ class AdminAccessTest {
     @WithMockUser(roles = "CRM")
     void shouldBlockNonAdminAccess() {
         assertThrows(AccessDeniedException.class,
-                () -> userService.findAll(0, 10));
-
-        assertThrows(AccessDeniedException.class,
                 () -> companyService.findAll(0, 10));
 
         assertThrows(AccessDeniedException.class,
@@ -39,8 +36,6 @@ class AdminAccessTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldAllowAdminAccess() {
-        assertAdminAccess(() -> userService.findAll(0, 10));
-
         assertAdminAccess(() -> companyService.findAll(0, 10));
 
         assertAdminAccess(() -> companyService.findById(UUID.randomUUID()));

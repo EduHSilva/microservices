@@ -31,6 +31,8 @@ class OwnerAccessTest {
     CompanyService companyService;
     @Mock
     CompanyRepository repository;
+    @Autowired
+    CompanyService userService;
 
     @BeforeEach
     void setup() {
@@ -56,6 +58,7 @@ class OwnerAccessTest {
         assertDoesNotThrow(() -> {
             try {
                 companyService.update(id, req);
+                userService.findAll(0, 10);
             } catch (Exception ignored) {
             }
         });
@@ -78,6 +81,9 @@ class OwnerAccessTest {
 
         assertThrows(AccessDeniedException.class,
                 () -> companyService.update(id, req));
+
+        assertThrows(AccessDeniedException.class,
+                () -> userService.findAll(0, 10));
     }
 
     @Test
@@ -88,6 +94,7 @@ class OwnerAccessTest {
         assertDoesNotThrow(() -> {
             try {
                 companyService.update(companyId, req);
+                companyService.findAll(0, 10);
             } catch (Exception ignored) {
             }
         });

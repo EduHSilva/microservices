@@ -14,6 +14,7 @@ import com.edu.silva.users.domain.producers.UserProducer;
 import com.edu.silva.users.infra.exceptions.CustomExceptions;
 import com.edu.silva.users.infra.security.TokenService;
 import com.edu.silva.users.infra.security.annotattions.OnlyAdmin;
+import com.edu.silva.users.infra.security.annotattions.OnlyOwner;
 import com.edu.silva.users.repositories.CompanyRepository;
 import com.edu.silva.users.repositories.UserRepository;
 import com.edu.silva.users.services.UserService;
@@ -95,7 +96,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @OnlyAdmin
+    @OnlyOwner
     public Page<@NonNull UserResponseDTO> findAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return repository.findAll(pageable).map(UserResponseDTO::new);

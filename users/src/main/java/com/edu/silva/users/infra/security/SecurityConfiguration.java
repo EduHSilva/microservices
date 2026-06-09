@@ -2,6 +2,7 @@ package com.edu.silva.users.infra.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -14,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -24,21 +27,44 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   Environment environment) {
+
+        boolean isProd = Arrays.asList(environment.getActiveProfiles())
+                .contains("prod");
+
+        String[] actuatorEndpoints = isProd
+                ? new String[]{"/actuator/health"}
+                : new String[]{
+                "/actuator/health",
+                "/actuator/metrics/**",
+                "/actuator/info",
+                "/actuator/env/**",
+                "/actuator/prometheus"
+        };
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/ping").permitAll()
+                        .requestMatchers(actuatorEndpoints).permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**"
+                        ).permitAll()
                         .requestMatchers(
                                 HttpMethod.POST,
-                                "/**",
-                                "/auth/login/**"
+                                "/auth/login",
+                                "/auth/register"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/confirm/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/").hasRole("ADMIN")
-                        .anyRequest().authenticated())
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(s ->
+                        s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .addFilterBefore(
+                        securityFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                )
                 .build();
     }
 

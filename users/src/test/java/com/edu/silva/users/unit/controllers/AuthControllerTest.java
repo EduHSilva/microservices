@@ -7,6 +7,7 @@ import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
 import com.edu.silva.users.domain.entities.User;
 import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.infra.security.TokenService;
+import com.edu.silva.users.repositories.UserRepository;
 import com.edu.silva.users.services.AuthService;
 import com.edu.silva.users.services.UserService;
 import org.apache.commons.lang.RandomStringUtils;
@@ -71,9 +72,6 @@ class AuthControllerTest {
     @Test
     void shouldInvalidLogin() {
         AuthRequestDTO request = new AuthRequestDTO("test@email.com", "password123", null);
-        User user = new User();
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
 
         when(manager.authenticate(any())).thenThrow(new BadCredentialsException("Invalid credentials"));
 
