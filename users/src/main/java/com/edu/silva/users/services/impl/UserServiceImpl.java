@@ -13,7 +13,6 @@ import com.edu.silva.users.domain.enums.UserStatus;
 import com.edu.silva.users.domain.producers.UserProducer;
 import com.edu.silva.users.infra.exceptions.CustomExceptions;
 import com.edu.silva.users.infra.security.TokenService;
-import com.edu.silva.users.infra.security.annotattions.OnlyAdmin;
 import com.edu.silva.users.infra.security.annotattions.OnlyOwner;
 import com.edu.silva.users.repositories.CompanyRepository;
 import com.edu.silva.users.repositories.UserRepository;

@@ -20,8 +20,6 @@ class AdminAccessTest {
 
     @Autowired
     CompanyService companyService;
-    @Autowired
-    UserService userService;
 
     @Test
     @WithMockUser(roles = "CRM")

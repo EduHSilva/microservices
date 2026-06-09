@@ -3,7 +3,6 @@ package com.edu.silva.users.controllers;
 import com.edu.silva.common.DefaultResponse;
 import com.edu.silva.users.domain.dtos.requests.UpdateCompanyRequestDTO;
 import com.edu.silva.users.domain.dtos.responses.CompanyResponseDTO;
-import com.edu.silva.users.infra.security.annotattions.OnlyAdmin;
 import com.edu.silva.users.services.CompanyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

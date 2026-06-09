@@ -7,8 +7,6 @@ import com.edu.silva.users.domain.dtos.responses.UserResponseDTO;
 import com.edu.silva.users.domain.entities.User;
 import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.infra.security.TokenService;
-import com.edu.silva.users.repositories.UserRepository;
-import com.edu.silva.users.services.AuthService;
 import com.edu.silva.users.services.UserService;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
