@@ -1,21 +1,28 @@
 package com.edu.silva.common;
 
+import org.slf4j.LoggerFactory;
+
 import java.time.Instant;
 import java.util.Map;
 
 public class Logger {
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Logger.class);
+
     public static void log(
             String userId,
-            String action,
-            String resource,
-            Map<String, String> meta
+            String method,
+            String path,
+            String service,
+            Map<String, Object> meta,
+            String ip
     ) {
         LogEvent event = new LogEvent(
                 Instant.now(),
                 userId,
-                action,
-                resource,
-                "",
+                method,
+                path,
+                service,
+                ip,
                 meta
         );
 
@@ -23,6 +30,6 @@ public class Logger {
     }
 
     private static void sendToAuditService(LogEvent event) {
-        // TODO: Implement Kafka producer logic here
+        log.info("{}", event);
     }
 }
