@@ -34,7 +34,7 @@ public class Company implements Serializable {
     private String name;
     @Enumerated(EnumType.STRING)
     private Status status;
-    @OneToMany
+    @OneToMany(mappedBy = "company")
     private List<User> users = new ArrayList<>();
     @OneToOne
     private User owner;

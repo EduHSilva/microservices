@@ -4,6 +4,7 @@ import com.edu.silva.users.domain.enums.UserRole;
 import com.edu.silva.users.domain.enums.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jdk.jfr.Timestamp;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
@@ -30,16 +31,19 @@ public class User implements UserDetails {
     private Date createdDate;
     @UpdateTimestamp
     private Date updatedDate;
+    private Date lastLogin;
     private String username;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<UserRole> roles = new ArrayList<>();
     @ToString.Exclude
     @ManyToOne
     private Company company;
+    
 
     public User(String username, String email, String password, List<UserRole> roles) {
         this.username = username;

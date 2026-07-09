@@ -6,9 +6,12 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.edu.silva</groupId>
+    <parent>
+        <groupId>com.edu.silva</groupId>
+        <artifactId>micro-services</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
     <artifactId>common</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>common</name>

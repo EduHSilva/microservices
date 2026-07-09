@@ -33,8 +33,8 @@ build/
 .vscode/
 
 .mvn
-*-dev.properties
-*-prod.properties
-**/*-docker.properties
 *.sql
 *.http
+.env
+.env.*
+!.env.example

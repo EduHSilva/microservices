@@ -23,7 +23,8 @@ public class JwtAuthFilter implements GlobalFilter {
     }
 
     Map<String, String> routeRoles = Map.of(
-            "/crm", "ROLE_CRM"
+            "/crm", "ROLE_CRM",
+            "/finances","ROLE_FINANCES"
     );
 
     @Override

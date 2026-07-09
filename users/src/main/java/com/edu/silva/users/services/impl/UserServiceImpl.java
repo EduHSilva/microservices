@@ -34,6 +34,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -157,7 +158,9 @@ public class UserServiceImpl implements UserService {
 
         String token = tokenService.generateToken(user);
 
-        return new LoginResponseDTO(user.getId(), user.getUsername(), user.getEmail(), token);
+        user.setLastLogin(new Date());
+        repository.save(user);
+        return new LoginResponseDTO(user.getId(), user.getUsername(), user.getEmail(), user.getLastLogin(), token);
     }
 
     private GoogleIdToken.Payload verifyToken(String token) {

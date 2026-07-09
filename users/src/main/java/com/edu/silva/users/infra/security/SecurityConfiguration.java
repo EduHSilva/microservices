@@ -48,9 +48,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(actuatorEndpoints).permitAll()
                         .requestMatchers(
-                                "/v3/api-docs/**"
-                        ).permitAll()
-                        .requestMatchers(
                                 HttpMethod.POST,
                                 "/auth/login",
                                 "/auth/register"
