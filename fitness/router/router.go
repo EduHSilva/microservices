@@ -36,6 +36,10 @@ func Init() {
 }
 
 func initRoutes(router *gin.Engine) {
+	router.GET("/actuator/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "UP"})
+	})
+
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "health service is running",

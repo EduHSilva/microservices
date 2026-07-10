@@ -21,7 +21,7 @@ func Register() {
 	serviceID := strings.ToLower(serviceName)
 	homePageURL := fmt.Sprintf("http://%s:%s/", host, port)
 	statusPageURL := homePageURL
-	healthCheckURL := homePageURL
+	healthCheckURL := fmt.Sprintf("http://%s:%s/actuator/health", host, port)
 
 	payload := fmt.Sprintf(`
 	<instance>

@@ -2,7 +2,6 @@ package com.edu.silva.users.infra.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -15,8 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -27,20 +24,13 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   Environment environment) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
 
-        boolean isProd = Arrays.asList(environment.getActiveProfiles())
-                .contains("prod");
-
-        String[] actuatorEndpoints = isProd
-                ? new String[]{"/actuator/health"}
-                : new String[]{
+        String[] actuatorEndpoints = new String[]{
                 "/actuator/health",
                 "/actuator/metrics/**",
                 "/actuator/info",
-                "/actuator/env/**",
-                "/actuator/prometheus"
+                "/actuator/loggers/**"
         };
 
         return http

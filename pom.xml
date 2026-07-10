@@ -19,6 +19,7 @@
     <modules>
         <module>common</module>
         <module>service-discover</module>
+        <module>admin</module>
         <module>gateway</module>
         <module>users</module>
         <module>payments</module>

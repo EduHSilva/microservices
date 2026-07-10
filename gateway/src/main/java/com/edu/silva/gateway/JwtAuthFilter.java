@@ -31,7 +31,8 @@ public class JwtAuthFilter implements GlobalFilter {
 
     Map<String, String> routeRoles = Map.of(
             "CRM", "ROLE_CRM",
-            "FINANCES","ROLE_FINANCES"
+            "FINANCES","ROLE_FINANCES",
+            "FITNESS", "ROLE_FITNESS"
     );
 
     @Override
@@ -49,7 +50,7 @@ public class JwtAuthFilter implements GlobalFilter {
             service = route.getUri().getHost();
         }
 
-        if (path.startsWith("/ping") || path.startsWith("/auth")) {
+        if (path.startsWith("/ping") || path.startsWith("/auth") || "admin".equalsIgnoreCase(service)) {
             Logger.log(null, method, path, service, meta, ip);
             return chain.filter(exchange);
         }
@@ -87,16 +88,19 @@ public class JwtAuthFilter implements GlobalFilter {
     }
 
     private String getClientIp(ServerWebExchange exchange) {
-        String xForwardedFor = exchange.getRequest().getHeaders().getFirst("X-Forwarded-For");
+        try {
+            String xForwardedFor = exchange.getRequest().getHeaders().getFirst("X-Forwarded-For");
 
-        if (xForwardedFor != null && !xForwardedFor.isBlank()) {
-            return xForwardedFor.split(",")[0].trim();
+            if (xForwardedFor != null && !xForwardedFor.isBlank()) {
+                return xForwardedFor.split(",")[0].trim();
+            }
+
+            if (exchange.getRequest().getRemoteAddress() != null) {
+                return exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
+            }
+        } catch (Exception e) {
+            //
         }
-
-        if (exchange.getRequest().getRemoteAddress() != null) {
-            return exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
-        }
-
         return null;
     }
 }
