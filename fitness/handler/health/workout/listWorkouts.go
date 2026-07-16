@@ -17,7 +17,7 @@ func GetWorkoutsHandler(ctx *gin.Context) {
 	getI18n, _ := ctx.Get("i18n")
 	locale, _ := ctx.Get("locale")
 
-	userID, exists := ctx.Get("user_id")
+	userID, exists := helper.GatewayUserID(ctx)
 	if !exists {
 		helper.SendErrorDefault(ctx, http.StatusUnauthorized, getI18n.(*i18n.Localizer))
 		return

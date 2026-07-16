@@ -2,18 +2,17 @@ package router
 
 import (
 	"health/handler/health/diet"
-	"health/helper"
 
 	"github.com/gin-gonic/gin"
 )
 
-func initDietRoutes(api *gin.RouterGroup) {
+func initDietRoutes(api *gin.Engine) {
 	diet.InitHandler()
 
-	api.GET("diet/meal/food", helper.DefaultMiddleware(), diet.SearchFoodHandler)
-	api.POST("diet/meal", helper.DefaultMiddleware(), diet.CreateMealHandler)
-	api.DELETE("diet/meal", helper.DefaultMiddleware(), diet.DeleteMealHandler)
-	api.PUT("diet/meal", helper.DefaultMiddleware(), diet.UpdateMealHandler)
-	api.GET("diet/meal", helper.DefaultMiddleware(), diet.GetMealHandler)
-	api.GET("diet/meals", helper.DefaultMiddleware(), diet.GetMealsHandler)
+	api.GET("diet/meal/food", diet.SearchFoodHandler)
+	api.POST("diet/meal", diet.CreateMealHandler)
+	api.DELETE("diet/meal", diet.DeleteMealHandler)
+	api.PUT("diet/meal", diet.UpdateMealHandler)
+	api.GET("diet/meal", diet.GetMealHandler)
+	api.GET("diet/meals", diet.GetMealsHandler)
 }

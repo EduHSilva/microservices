@@ -34,9 +34,14 @@ func UpdateWorkoutHandler(ctx *gin.Context) {
 			helper.ErrParamIsRequired("id", "query param").Error())
 		return
 	}
+	userID, exists := helper.GatewayUserID(ctx)
+	if !exists {
+		helper.SendErrorDefault(ctx, http.StatusUnauthorized, getI18n.(*i18n.Localizer))
+		return
+	}
 
 	work := &workout.Workout{}
-	if err := db.Preload("Exercises").First(&work, id).Error; err != nil {
+	if err := db.Where("id = ? AND user_id = ?", id, userID).Preload("Exercises").First(work).Error; err != nil {
 		helper.SendErrorDefault(ctx, http.StatusNotFound, getI18n.(*i18n.Localizer))
 		return
 	}

@@ -2,12 +2,13 @@ package seeds
 
 import (
 	"embed"
+	"health/schemas/diet"
 	"health/schemas/workout"
 
 	"gorm.io/gorm"
 )
 
-//go:embed json/*.json
+//go:embed data/*.json data/*.xlsx
 var Files embed.FS
 
 func Load(db *gorm.DB) {
@@ -16,5 +17,10 @@ func Load(db *gorm.DB) {
 	db.Model(&workout.Exercise{}).Count(&count)
 	if count == 0 {
 		loadExerciseFromFile(db)
+	}
+
+	db.Model(&diet.Food{}).Count(&count)
+	if count == 0 {
+		loadFoodFromExcel(db)
 	}
 }

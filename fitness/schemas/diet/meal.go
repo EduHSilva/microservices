@@ -4,8 +4,8 @@ import "gorm.io/gorm"
 
 type Meal struct {
 	gorm.Model
-	Name   string `json:"name"`
-	Hour   string `json:"hour"`
-	Foods  []Food `json:"foods" gorm:"foreignKey:MealID"`
-	UserID uint   `json:"user_id"`
+	Name   string     `json:"name"`
+	Hour   string     `json:"hour"`
+	Foods  []MealFood `json:"foods" gorm:"foreignKey:MealID"`
+	UserID string     `json:"user_id" gorm:"type:uuid;not null"`
 }

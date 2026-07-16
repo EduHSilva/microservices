@@ -15,6 +15,11 @@ import (
 func CreateMealHandler(ctx *gin.Context) {
 	request := CreateMealRequest{}
 	getI18n, _ := ctx.Get("i18n")
+	userID, exists := helper.GatewayUserID(ctx)
+	if !exists {
+		helper.SendErrorDefault(ctx, http.StatusUnauthorized, getI18n.(*i18n.Localizer))
+		return
+	}
 
 	if err := ctx.BindJSON(&request); err != nil {
 		logger.ErrF("validation error: %v", err.Error())
@@ -29,7 +34,7 @@ func CreateMealHandler(ctx *gin.Context) {
 	}
 
 	var existingMeal diet.Meal
-	if err := db.Where("name = ? AND user_id = ?", request.Name, request.UserID).First(&existingMeal).Error; err == nil {
+	if err := db.Where("name = ? AND user_id = ?", request.Name, userID).First(&existingMeal).Error; err == nil {
 		logger.Err("Meal already exists")
 		message := getI18n.(*i18n.Localizer).MustLocalize(&i18n.LocalizeConfig{
 			MessageID: "alreadyExists",
@@ -44,16 +49,15 @@ func CreateMealHandler(ctx *gin.Context) {
 
 	meal := diet.Meal{
 		Name:   request.Name,
-		UserID: request.UserID,
+		UserID: userID,
 		Hour:   request.Hour,
 	}
 
 	for _, food := range request.Foods {
-		meal.Foods = append(meal.Foods, diet.Food{
-			Name:        food.Name,
+		meal.Foods = append(meal.Foods, diet.MealFood{
+			MealFood:    food.FoodID,
 			Quantity:    food.Quantity,
 			Observation: food.Observation,
-			ImageUrl:    food.ImageUrl,
 		})
 	}
 

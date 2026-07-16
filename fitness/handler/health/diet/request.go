@@ -5,18 +5,15 @@ import (
 )
 
 type CreateMealRequest struct {
-	Name   string        `json:"name"`
-	Hour   string        `json:"hour"`
-	UserID uint          `json:"user_id"`
-	Foods  []FoodRequest `json:"foods"`
+	Name  string        `json:"name"`
+	Hour  string        `json:"hour"`
+	Foods []FoodRequest `json:"foods"`
 }
 
 type FoodRequest struct {
 	FoodID      uint   `json:"food_id"`
 	Quantity    int    `json:"quantity"`
-	Name        string `json:"name"`
 	Observation string `json:"observation"`
-	ImageUrl    string `json:"image_url"`
 }
 
 func (r CreateMealRequest) Validate() error {
@@ -26,9 +23,6 @@ func (r CreateMealRequest) Validate() error {
 	}
 	if r.Hour == "" {
 		return helper.ErrParamIsRequired("hour", "string")
-	}
-	if r.UserID == 0 {
-		return helper.ErrParamIsRequired("user_id", "uint")
 	}
 	if len(r.Foods) == 0 {
 		return helper.ErrParamIsRequired("foods", "food")

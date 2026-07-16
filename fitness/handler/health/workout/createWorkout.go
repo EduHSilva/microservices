@@ -16,6 +16,11 @@ func CreateWorkoutHandler(ctx *gin.Context) {
 	request := CreateWorkoutRequest{}
 	getI18n, _ := ctx.Get("i18n")
 	locale, _ := ctx.Get("locale")
+	userID, exists := helper.GatewayUserID(ctx)
+	if !exists {
+		helper.SendErrorDefault(ctx, http.StatusUnauthorized, getI18n.(*i18n.Localizer))
+		return
+	}
 
 	if err := ctx.BindJSON(&request); err != nil {
 		logger.ErrF("validation error: %v", err.Error())
@@ -30,7 +35,7 @@ func CreateWorkoutHandler(ctx *gin.Context) {
 	}
 
 	var existingWorkout workout.Workout
-	if err := db.Where("name = ? and user_id = ?", request.Name, request.UserID).First(&existingWorkout).Error; err == nil {
+	if err := db.Where("name = ? and user_id = ?", request.Name, userID).First(&existingWorkout).Error; err == nil {
 		logger.Err("Workout already exists")
 		message := getI18n.(*i18n.Localizer).MustLocalize(&i18n.LocalizeConfig{
 			MessageID: "alreadyExists",
@@ -45,7 +50,7 @@ func CreateWorkoutHandler(ctx *gin.Context) {
 
 	work := workout.Workout{
 		Name:   request.Name,
-		UserID: request.UserID,
+		UserID: userID,
 	}
 
 	for _, e := range request.Exercises {

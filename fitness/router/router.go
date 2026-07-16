@@ -1,12 +1,13 @@
 package router
 
 import (
-	"health/helper"
+	"health/config"
 	"net/http"
 	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 func Init() {
@@ -15,8 +16,9 @@ func Init() {
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders: []string{"Content-Type", "Authorization", "x-access-token", "Accept-Language"},
+		AllowHeaders: []string{"Content-Type", "Authorization", "Accept-Language"},
 	}))
+	router.Use(localization)
 
 	initRoutes(router)
 
@@ -35,26 +37,22 @@ func Init() {
 	}
 }
 
+func localization(ctx *gin.Context) {
+	locale := ctx.GetHeader("Accept-Language")
+	if locale == "" {
+		locale = "en"
+	}
+
+	ctx.Set("i18n", i18n.NewLocalizer(config.GetBundler(), locale))
+	ctx.Set("locale", locale)
+	ctx.Next()
+}
+
 func initRoutes(router *gin.Engine) {
 	router.GET("/actuator/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "UP"})
 	})
 
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "health service is running",
-		})
-	})
-
-	basePath := "/api/v1"
-	api := router.Group(basePath)
-
-	api.GET("/", helper.Middleware(false), func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Hello World",
-		})
-	})
-
-	initWorkoutRoutes(api)
-	initDietRoutes(api)
+	initWorkoutRoutes(router)
+	initDietRoutes(router)
 }

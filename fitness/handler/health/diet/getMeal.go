@@ -19,9 +19,14 @@ func GetMealHandler(ctx *gin.Context) {
 			helper.ErrParamIsRequired("id", "query param").Error())
 		return
 	}
+	userID, exists := helper.GatewayUserID(ctx)
+	if !exists {
+		helper.SendErrorDefault(ctx, http.StatusUnauthorized, getI18n.(*i18n.Localizer))
+		return
+	}
 
 	meal := diet.Meal{}
-	if err := db.Where("id = ?", id).Preload("Foods").Find(&meal).Error; err != nil {
+	if err := db.Where("id = ? AND user_id = ?", id, userID).Preload("Foods").First(&meal).Error; err != nil {
 		helper.SendErrorDefault(ctx, http.StatusInternalServerError, getI18n.(*i18n.Localizer))
 		return
 	}

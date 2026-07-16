@@ -38,15 +38,29 @@ type ResponseDiet struct {
 	Data    ResponseData `json:"data"`
 }
 
-func ConvertFoodToResponse(food *diet.Food) ResponseDataFood {
+func ConvertFoodToResponse(food *diet.MealFood) ResponseDataFood {
 	return ResponseDataFood{
-		ID:   food.ID,
-		Name: food.Name,
-		Photo: PhotoField{
-			Thumb: food.ImageUrl,
-		},
+		ID: food.ID,
+		//Name: food.MealFood,
 		Quantity:    food.Quantity,
 		Observation: food.Observation,
+	}
+}
+
+type FoodResponse struct {
+	ID       uint    `json:"id"`
+	Name     string  `json:"name"`
+	Calories float64 `json:"calories"`
+	Protein  float64 `json:"protein"`
+	Carbs    float64 `json:"carbs"`
+	Fat      float64 `json:"fat"`
+	Fiber    float64 `json:"fiber"`
+}
+
+func ConvertFoodsToResponse(food *diet.Food) FoodResponse {
+	return FoodResponse{
+		ID:   food.ID,
+		Name: food.Name,
 	}
 }
 

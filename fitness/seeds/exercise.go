@@ -31,7 +31,7 @@ func instructionsToHTML(instructions []string) string {
 }
 
 func loadExercisesFromFile(db *gorm.DB) error {
-	file, err := Files.ReadFile("json/exercises.json")
+	file, err := Files.ReadFile("data/exercises.json")
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func translate(text string) string {
 }
 
 func loadTranslations() map[string]string {
-	file, err := Files.ReadFile("json/exercises_translations.json")
+	file, err := Files.ReadFile("data/exercises_translations.json")
 	if err != nil {
 		log.Fatalf("Erro ao carregar o arquivo de traduções: %v", err)
 	}

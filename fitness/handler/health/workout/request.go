@@ -6,7 +6,6 @@ import (
 
 type CreateWorkoutRequest struct {
 	Name      string                   `json:"name"`
-	UserID    uint                     `json:"user_id"`
 	Exercises []ExerciseWorkoutRequest `json:"exercises"`
 }
 
@@ -24,9 +23,6 @@ func (r CreateWorkoutRequest) Validate() error {
 
 	if r.Name == "" {
 		return helper.ErrParamIsRequired("name", "string")
-	}
-	if r.UserID == 0 {
-		return helper.ErrParamIsRequired("user_id", "uint")
 	}
 	if len(r.Exercises) == 0 {
 		return helper.ErrParamIsRequired("exercises", "exercise")
