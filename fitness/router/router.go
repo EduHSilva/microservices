@@ -55,4 +55,5 @@ func initRoutes(router *gin.Engine) {
 
 	initWorkoutRoutes(router)
 	initDietRoutes(router)
+	initConfigRoutes(router)
 }

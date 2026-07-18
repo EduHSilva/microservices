@@ -14,5 +14,6 @@ func initWorkoutRoutes(api *gin.Engine) {
 	api.POST("workout", workout.CreateWorkoutHandler)
 	api.DELETE("workout", workout.DeleteWorkoutHandler)
 	api.PUT("workout", workout.UpdateWorkoutHandler)
+	api.PUT("workouts/week", workout.UpdateWorkoutWeekHandler)
 	api.GET("workout/exercises", workout.GetExercisesHandler)
 }

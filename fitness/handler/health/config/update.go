@@ -1,0 +1,87 @@
+package config
+
+import (
+	"health/helper"
+	configSchema "health/schemas/config"
+	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
+	"gorm.io/datatypes"
+)
+
+func UpdateUserConfigHandler(ctx *gin.Context) {
+	request := UpdateUserConfigRequest{}
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		helper.SendError(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+	if err := request.Validate(); err != nil {
+		helper.SendError(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	getI18n, _ := ctx.Get("i18n")
+	userID, exists := helper.GatewayUserID(ctx)
+	if !exists {
+		helper.SendErrorDefault(ctx, http.StatusUnauthorized, getI18n.(*i18n.Localizer))
+		return
+	}
+
+	userConfig := configSchema.UserConfig{UserID: userID}
+	if err := db.Where("user_id = ?", userID).FirstOrCreate(&userConfig).Error; err != nil {
+		helper.SendErrorDefault(ctx, http.StatusInternalServerError, getI18n.(*i18n.Localizer))
+		return
+	}
+	if request.ShowCreatine != nil {
+		userConfig.ShowCreatine = *request.ShowCreatine
+	}
+	if request.DailyCardio != nil {
+		userConfig.DailyCardio = *request.DailyCardio
+	}
+	if err := db.Save(&userConfig).Error; err != nil {
+		helper.SendErrorDefault(ctx, http.StatusInternalServerError, getI18n.(*i18n.Localizer))
+		return
+	}
+
+	helper.SendSuccess(ctx, ConvertUserConfigToUserConfigResponse(&userConfig, nil))
+}
+
+func UpdateUserDayHistoryHandler(ctx *gin.Context) {
+	request := UpdateHistoryRequest{}
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		helper.SendError(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+	if err := request.Validate(); err != nil {
+		helper.SendError(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	getI18n, _ := ctx.Get("i18n")
+	userID, exists := helper.GatewayUserID(ctx)
+	if !exists {
+		helper.SendErrorDefault(ctx, http.StatusUnauthorized, getI18n.(*i18n.Localizer))
+		return
+	}
+
+	today := time.Now()
+	history := configSchema.History{UserID: userID, EventDate: datatypes.Date(today)}
+	if err := db.Where("user_id = ? AND event_date = ?", userID, today.Format("2006-01-02")).FirstOrCreate(&history).Error; err != nil {
+		helper.SendErrorDefault(ctx, http.StatusInternalServerError, getI18n.(*i18n.Localizer))
+		return
+	}
+	if request.Creatine != nil {
+		history.Creatine = *request.Creatine
+	}
+	if request.Cardio != nil {
+		history.Cardio = *request.Cardio
+	}
+	if err := db.Save(&history).Error; err != nil {
+		helper.SendErrorDefault(ctx, http.StatusInternalServerError, getI18n.(*i18n.Localizer))
+		return
+	}
+
+	helper.SendSuccess(ctx, ConvertHistoryToHistoryResponse(&history))
+}

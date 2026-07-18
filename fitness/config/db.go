@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"health/schemas/config"
 	"health/schemas/diet"
 	"health/schemas/workout"
 	"health/seeds"
@@ -49,6 +50,9 @@ func InitDatabase() (*gorm.DB, error) {
 		&workout.ExerciseWorkout{},
 		&diet.Meal{},
 		&diet.Food{},
+		&diet.MealFood{},
+		&config.UserConfig{},
+		&config.History{},
 	}
 
 	for _, table := range tables {

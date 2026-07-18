@@ -6,6 +6,7 @@ COPY . .
 
 ARG SERVICE_NAME
 
+RUN mvn dependency:go-offline
 RUN mvn clean package -pl ${SERVICE_NAME} -am -DskipTests
 
 FROM eclipse-temurin:21-jre

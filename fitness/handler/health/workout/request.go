@@ -34,6 +34,43 @@ func (r CreateWorkoutRequest) Validate() error {
 type UpdateWorkoutRequest struct {
 	Name      string                   `json:"name"`
 	Exercises []ExerciseWorkoutRequest `json:"exercises"`
+	DayOfWeek uint                     `json:"dayOfWeek"`
+}
+
+// UpdateWorkoutWeekRequest replaces the user's weekly workout schedule.
+// DayOfWeek follows ISO-8601: 1 is Monday and 7 is Sunday. A null workoutId
+// leaves that day without a workout.
+type UpdateWorkoutWeekRequest struct {
+	Days []WorkoutWeekDayRequest `json:"days"`
+}
+
+type WorkoutWeekDayRequest struct {
+	DayOfWeek uint  `json:"dayOfWeek"`
+	WorkoutID *uint `json:"workoutId"`
+}
+
+func (r UpdateWorkoutWeekRequest) Validate() error {
+	if len(r.Days) != 7 {
+		return helper.ErrParamIsRequired("days", "seven days of the week")
+	}
+
+	days := make(map[uint]bool, len(r.Days))
+	workouts := make(map[uint]bool)
+	for _, day := range r.Days {
+		if day.DayOfWeek < 1 || day.DayOfWeek > 7 || days[day.DayOfWeek] {
+			return helper.ErrParamIsRequired("days.dayOfWeek", "unique value between 1 and 7")
+		}
+		days[day.DayOfWeek] = true
+
+		if day.WorkoutID != nil {
+			if *day.WorkoutID == 0 || workouts[*day.WorkoutID] {
+				return helper.ErrParamIsRequired("days.workoutId", "unique workout id")
+			}
+			workouts[*day.WorkoutID] = true
+		}
+	}
+
+	return nil
 }
 
 func (r UpdateWorkoutRequest) Validate() error {

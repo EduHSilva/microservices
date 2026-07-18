@@ -37,6 +37,7 @@ type ResponseData struct {
 	UpdateAt  time.Time              `json:"updateAt"`
 	DeletedAt time.Time              `json:"deletedAt,omitempty"`
 	Name      string                 `json:"name"`
+	DayOfWeek uint                   `json:"dayOfWeek"`
 	Exercises []ResponseDataExercise `json:"exercises"`
 }
 
@@ -128,6 +129,7 @@ func ConvertWorkoutToWorkoutResponse(workout *workout.Workout, locale any) Respo
 		UpdateAt:  workout.UpdatedAt,
 		DeletedAt: workout.DeletedAt.Time,
 		Name:      workout.Name,
+		DayOfWeek: workout.DayOfWeek,
 		Exercises: exercisesResponse,
 	}
 }
